@@ -11,8 +11,8 @@ struct MedicationRowView: View {
             Text(medication.description)
                 .font(.subheadline)
             Text("Dosage: \(medication.dosage) \(medication.dosageUnit)")
-            Text("Times a day: \(medication.timesAday)")
-            Text("Timestamp: \(medication.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
+            Text("When to take: \(medication.expectedTimes.joined(separator: ", "))")
+            Text("Timestamp: \(medication.actualTimes.map { $0.description }.joined(separator: ", "))")
         }
         .contentShape(Rectangle())
     }

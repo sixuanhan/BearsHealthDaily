@@ -32,13 +32,13 @@ struct ContentView: View {
     private func addSampleData() {
         users = [
             User(id: UUID(), name: "A", medications: [
-                Medication(id: UUID(), name: "Medication 1", description: "Description 1", dosage: 10.0, dosageUnit: "mg", timesAday: 2, timestamp: Date())
+                Medication(id: UUID(), name: "Medication 1", description: "Description 1", dosage: 10.0, dosageUnit: "mg", expectedTimes: [], actualTimes: [])
             ]),
             User(id: UUID(), name: "B", medications: [
-                Medication(id: UUID(), name: "Medication 2", description: "Description 2", dosage: 5.0, dosageUnit: "ml", timesAday: 3, timestamp: Date())
+                Medication(id: UUID(), name: "Medication 2", description: "Description 2", dosage: 5.0, dosageUnit: "ml", expectedTimes: [], actualTimes: [])
             ]),
             User(id: UUID(), name: "C", medications: [
-                Medication(id: UUID(), name: "Medication 3", description: "Description 3", dosage: 20.0, dosageUnit: "mg", timesAday: 1, timestamp: Date())
+                Medication(id: UUID(), name: "Medication 3", description: "Description 3", dosage: 20.0, dosageUnit: "mg", expectedTimes: [], actualTimes: [])
             ])
         ]
     }

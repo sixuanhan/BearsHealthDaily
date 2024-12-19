@@ -5,9 +5,9 @@ struct MedicationListView: View {
 
     @State private var isPresentingAddMedication = false
     @State private var isPresentingEditMedication = false
-    @State private var newMedication = Medication(id: UUID(), name: "", description: "", dosage: 0.0, dosageUnit: "", timesAday: 0, timestamp: Date())
+    @State private var newMedication = Medication(id: UUID(), name: "", description: "", dosage: 0.0, dosageUnit: "", expectedTimes: [], actualTimes: [])
     @State private var selectedMedication: Medication?
-    @State private var editableMedication = Medication(id: UUID(), name: "", description: "", dosage: 0.0, dosageUnit: "", timesAday: 0, timestamp: Date())
+    @State private var editableMedication = Medication(id: UUID(), name: "", description: "", dosage: 0.0, dosageUnit: "", expectedTimes: [], actualTimes: [])
     @State private var isEditMode = false
 
     var body: some View {
@@ -33,7 +33,7 @@ struct MedicationListView: View {
                     }
                     Spacer()
                     Button(action: { isEditMode.toggle() }) {
-                        Text(isEditMode ? "Done" : "Edit")
+                        Label(isEditMode ? "Done" : "Edit", systemImage: isEditMode ? "checkmark" : "pencil")
                     }
                     Spacer()
                 }
@@ -63,7 +63,7 @@ struct MedicationListView: View {
     // modify the new medication and add it to the list
     private func addMedication() {
         user.medications.append(newMedication)
-        newMedication = Medication(id: UUID(), name: "", description: "", dosage: 0.0, dosageUnit: "", timesAday: 0, timestamp: Date())
+        newMedication = Medication(id: UUID(), name: "", description: "", dosage: 0.0, dosageUnit: "", expectedTimes: [], actualTimes: [])
     }
 
     // modify the selected medication
@@ -80,8 +80,8 @@ struct MedicationListView: View {
 
 #Preview {
     @Previewable @State var sampleUser = User(id: UUID(), name: "Sample User", medications: [
-        Medication(id: UUID(), name: "Medication 1", description: "Description 1", dosage: 10.0, dosageUnit: "mg", timesAday: 2, timestamp: Date()),
-        Medication(id: UUID(), name: "Medication 2", description: "Description 2", dosage: 5.0, dosageUnit: "ml", timesAday: 3, timestamp: Date())
+        Medication(id: UUID(), name: "Medication 1", description: "Description 1", dosage: 10.0, dosageUnit: "mg", expectedTimes: ["08:00, 12:00, 19:00"], actualTimes: []),
+        Medication(id: UUID(), name: "Medication 2", description: "Description 2", dosage: 5.0, dosageUnit: "ml", expectedTimes: ["12:00, 19:00"], actualTimes: [])
     ])
     MedicationListView(user: $sampleUser)
 }

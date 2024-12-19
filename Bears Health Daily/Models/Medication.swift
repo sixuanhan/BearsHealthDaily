@@ -6,8 +6,8 @@ struct Medication: Identifiable, Codable, Equatable {
     var description: String
     var dosage: Double
     var dosageUnit: String
-    var timesAday: Int
-    var timestamp: Date
+    var expectedTimes: [String]
+    var actualTimes: [Date]
 
     static func == (lhs: Medication, rhs: Medication) -> Bool {
         return lhs.id == rhs.id &&
@@ -15,7 +15,7 @@ struct Medication: Identifiable, Codable, Equatable {
                lhs.description == rhs.description &&
                lhs.dosage == rhs.dosage &&
                lhs.dosageUnit == rhs.dosageUnit &&
-               lhs.timesAday == rhs.timesAday &&
-               lhs.timestamp == rhs.timestamp
+               lhs.expectedTimes == rhs.expectedTimes &&
+               lhs.actualTimes == rhs.actualTimes
     }
 }
