@@ -8,17 +8,21 @@
 import SwiftUI
 
 struct SwiftUIView: View {
+//    var actualTimes: [Date]
+
     var body: some View {
         HStack {
-            Spacer()
-            Button("Cancel") {
-                print("clicked cancel")
+            Button(action: {
+//                actualTimes.append(Date())
+            }) {
+                Label("Add Actual Time", systemImage: "plus")
             }
             Spacer()
-            Button("Save") {
-                print("clicked save")
+            Button(action: {
+//                actualTimes.append(Date())
+            }) {
+                Label("Add Now", systemImage: "clock")
             }
-            Spacer()
         }
     }
 }

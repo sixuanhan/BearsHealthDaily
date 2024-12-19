@@ -28,23 +28,46 @@ struct ExpectedTimesView: View {
 struct ActualTimesView: View {
     @Binding var actualTimes: [Date]
 
-    var body: some View {
+var body: some View {
         Section(header: Text("Actual Times")) {
             List {
                 ForEach(actualTimes.indices, id: \.self) { index in
                     DatePicker("Time \(index + 1)", selection: $actualTimes[index], displayedComponents: .hourAndMinute)
                 }
                 .onDelete(perform: deleteActualTimes)
-                Button(action: {
-                    actualTimes.append(Date())
-                }) {
-                    Label("Add Actual Time", systemImage: "plus")
-                }
             }
+            AddNowView(actualTimes: $actualTimes)
+            .buttonStyle(BorderlessButtonStyle())
         }
     }
 
     private func deleteActualTimes(at offsets: IndexSet) {
         actualTimes.remove(atOffsets: offsets)
     }
+}
+
+struct AddNowView: View {
+    @Binding var actualTimes: [Date]
+    var body: some View {
+        VStack {
+            Spacer()
+            Button(action: {
+                actualTimes.append(Date())
+            }) {
+                Label("Add Actual Time", systemImage: "plus")
+            }
+            Spacer()
+            Spacer()
+            Button(action: {
+                actualTimes.append(Date())
+            }) {
+                Label("Add Now", systemImage: "clock")
+            }
+            Spacer()
+        }
+    }
+}
+
+#Preview {
+    AddNowView(actualTimes: .constant([]))
 }
