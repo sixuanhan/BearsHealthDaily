@@ -16,6 +16,7 @@ struct MedicationListView: View {
                 List {
                     ForEach(user.medications) { medication in
                         MedicationRowView(medication: medication)
+                            .listRowBackground(Color.clear)
                             .onTapGesture {
                                 if isEditMode {
                                     selectedMedication = medication
@@ -25,6 +26,8 @@ struct MedicationListView: View {
                             }
                     }
                     .onDelete(perform: isEditMode ? deleteMedications : nil)
+                    .scrollContentBackground(.hidden)
+                    .background(Color(.systemGroupedBackground))
                 }
                 HStack {
                     Spacer()
