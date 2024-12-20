@@ -9,10 +9,22 @@ struct MedicationRowView: View {
                 Text(medication.name)
                     .font(.headline)
                     .foregroundColor(.primary)
+                Text(medication.brand)
+                    .font(.subheadline)
+                    .foregroundColor(.primary)
                 Text(medication.description)
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                 Text("Dosage: \(String(format: "%.1f", medication.dosage)) \(medication.dosageUnit)")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                Text("Start Date: \(medication.startDate, formatter: dateFormatter)")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                Text("Days Till Now: \(Calendar.current.dateComponents([.day], from: medication.startDate, to: Date()).day ?? 0)")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                Text("How Bought: \(medication.howBought)")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                 Text("When to take: \(medication.expectedTimes.joined(separator: ", "))")
@@ -45,9 +57,15 @@ struct MedicationRowView: View {
         formatter.timeStyle = .short
         return formatter
     }
+
+    private var dateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy/MM/dd"
+        return formatter
+    }
 }
 
 #Preview {
-    MedicationRowView(medication: Medication(id: UUID(), name: "Medication Name", description: "Medication Description", dosage: 1, dosageUnit: "pill", expectedTimes: ["Morning", "Afternoon", "Evening"], actualTimes: [], cycle: 1))
+    MedicationRowView(medication: Medication(id: UUID(), name: "神奇的药", brand: "梦工厂", description: "我瞎编的", dosage: 1, dosageUnit: "粒", startDate: Date(), howBought: "买不到", expectedTimes: ["早", "中", "晚"], actualTimes: [], cycle: 1))
         .padding()
 }
