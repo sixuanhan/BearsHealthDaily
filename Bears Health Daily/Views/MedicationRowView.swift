@@ -18,11 +18,12 @@ struct MedicationRowView: View {
                 Text("When to take: \(medication.expectedTimes.joined(separator: ", "))")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
-                ForEach(medication.actualTimes, id: \.self) { time in
-                    Text("Time: \(time, formatter: timeFormatter)")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                }
+                Text("Time: \(medication.actualTimes.map { timeFormatter.string(from: $0) }.joined(separator: ", "))")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                Text("Cycle: \(medication.cycle)")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
             }
             Spacer()
             Text("\(medication.actualTimes.count)/\(medication.expectedTimes.count)")
@@ -47,7 +48,6 @@ struct MedicationRowView: View {
 }
 
 #Preview {
-    MedicationRowView(medication: Medication(id: UUID(), name: "Medication Name", description: "Medication Description", dosage: 1, dosageUnit: "pill", expectedTimes: ["Morning", "Afternoon", "Evening"], actualTimes: [Date()]))
-        .previewLayout(.sizeThatFits)
+    MedicationRowView(medication: Medication(id: UUID(), name: "Medication Name", description: "Medication Description", dosage: 1, dosageUnit: "pill", expectedTimes: ["Morning", "Afternoon", "Evening"], actualTimes: [], cycle: 1))
         .padding()
 }

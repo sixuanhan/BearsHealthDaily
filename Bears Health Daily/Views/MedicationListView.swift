@@ -5,9 +5,9 @@ struct MedicationListView: View {
 
     @State private var isPresentingAddMedication = false
     @State private var isPresentingEditMedication = false
-    @State private var newMedication = Medication(id: UUID(), name: "", description: "", dosage: 0.0, dosageUnit: "", expectedTimes: [], actualTimes: [])
+    @State private var newMedication = Medication(id: UUID(), name: "", description: "", dosage: 0.0, dosageUnit: "", expectedTimes: [], actualTimes: [], cycle: 1)
     @State private var selectedMedication: Medication?
-    @State private var editableMedication = Medication(id: UUID(), name: "", description: "", dosage: 0.0, dosageUnit: "", expectedTimes: [], actualTimes: [])
+    @State private var editableMedication = Medication(id: UUID(), name: "", description: "", dosage: 0.0, dosageUnit: "", expectedTimes: [], actualTimes: [], cycle: 1)
     @State private var isEditMode = false
 
     var body: some View {
@@ -26,8 +26,6 @@ struct MedicationListView: View {
                             }
                     }
                     .onDelete(perform: isEditMode ? deleteMedications : nil)
-                    .scrollContentBackground(.hidden)
-                    .background(Color(.systemGroupedBackground))
                 }
                 HStack {
                     Spacer()
@@ -43,6 +41,9 @@ struct MedicationListView: View {
                 .padding()
             }
             .navigationTitle(user.name)
+            .onAppear {
+                checkAndClearActualTimes()
+            }
             .sheet(isPresented: $isPresentingAddMedication) {
                 MedicationFormView(medication: $newMedication, onSave: {
                     addMedication()
@@ -66,7 +67,7 @@ struct MedicationListView: View {
     // modify the new medication and add it to the list
     private func addMedication() {
         user.medications.append(newMedication)
-        newMedication = Medication(id: UUID(), name: "", description: "", dosage: 0.0, dosageUnit: "", expectedTimes: [], actualTimes: [])
+        newMedication = Medication(id: UUID(), name: "", description: "", dosage: 0.0, dosageUnit: "", expectedTimes: [], actualTimes: [], cycle: 1)
     }
 
     // modify the selected medication
@@ -79,12 +80,26 @@ struct MedicationListView: View {
     private func deleteMedications(at offsets: IndexSet) {
         user.medications.remove(atOffsets: offsets)
     }
+
+    private func checkAndClearActualTimes() {
+        let now = Date()
+        for index in user.medications.indices {
+            let medication = user.medications[index]
+            if let lastTime = medication.actualTimes.last {
+                let daysSinceLastTime = Calendar.current.dateComponents([.day], from: lastTime, to: now).day ?? 0
+                if daysSinceLastTime >= medication.cycle {
+                    print("Clearing actual times for medication: \(medication.name ?? "Unknown")")
+                    user.medications[index].actualTimes.removeAll()
+                }
+            }
+        }
+    }
 }
 
 #Preview {
     @Previewable @State var sampleUser = User(id: UUID(), name: "Sample User", medications: [
-        Medication(id: UUID(), name: "Medication 1", description: "Description 1", dosage: 10.0, dosageUnit: "mg", expectedTimes: ["08:00, 12:00, 19:00"], actualTimes: []),
-        Medication(id: UUID(), name: "Medication 2", description: "Description 2", dosage: 5.0, dosageUnit: "ml", expectedTimes: ["12:00, 19:00"], actualTimes: [])
+        Medication(id: UUID(), name: "Medication 1", description: "Description 1", dosage: 10.0, dosageUnit: "mg", expectedTimes: ["08:00, 12:00, 19:00"], actualTimes: [], cycle: 1),
+        Medication(id: UUID(), name: "Medication 2", description: "Description 2", dosage: 5.0, dosageUnit: "ml", expectedTimes: ["12:00, 19:00"], actualTimes: [], cycle: 1)
     ])
     MedicationListView(user: $sampleUser)
 }

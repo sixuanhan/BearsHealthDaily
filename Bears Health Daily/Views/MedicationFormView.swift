@@ -1,5 +1,4 @@
 import SwiftUI
-import CoreData
 
 struct MedicationFormView: View {
     @Binding var medication: Medication
@@ -8,16 +7,17 @@ struct MedicationFormView: View {
 
     @State private var name: String = ""
     @State private var description: String = ""
-    @State private var dosage: Double = 0.0
+    @State private var dosage: Double = 1.0
     @State private var dosageUnit: String = ""
     @State private var expectedTimes: [String] = []
     @State private var actualTimes: [Date] = []
+    @State private var cycle: Int = 1
 
     var body: some View {
         NavigationView {
             VStack {
                 Form {
-                    MedicationTextFieldsView(name: $name, description: $description, dosage: $dosage, dosageUnit: $dosageUnit)
+                    MedicationTextFieldsView(name: $name, description: $description, dosage: $dosage, dosageUnit: $dosageUnit, cycle: $cycle)
                     ExpectedTimesView(expectedTimes: $expectedTimes)
                     ActualTimesView(actualTimes: $actualTimes)
                 }
@@ -49,6 +49,7 @@ struct MedicationFormView: View {
         dosageUnit = medication.dosageUnit
         expectedTimes = medication.expectedTimes
         actualTimes = medication.actualTimes
+        cycle = medication.cycle
     }
 
     private func saveMedication() {
@@ -58,9 +59,10 @@ struct MedicationFormView: View {
         medication.dosageUnit = dosageUnit
         medication.expectedTimes = expectedTimes
         medication.actualTimes = actualTimes
+        medication.cycle = cycle
     }
 }
 
 #Preview {
-    MedicationFormView(medication: .constant(Medication(id: UUID(), name: "test med", description: "this is test", dosage: 0.5, dosageUnit: "pill", expectedTimes: [], actualTimes: [])), onSave: {}, onCancel: {})
+    MedicationFormView(medication: .constant(Medication(id: UUID(), name: "test med", description: "this is test", dosage: 0.5, dosageUnit: "pill", expectedTimes: [], actualTimes: [], cycle: 1)), onSave: {}, onCancel: {})
 }
