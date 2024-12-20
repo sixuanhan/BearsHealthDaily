@@ -1,6 +1,6 @@
 import Foundation
 
-struct User: Identifiable, Codable, Equatable {
+struct User: Identifiable, Codable, Equatable, Hashable {
     var id: UUID
     var name: String
     var medications: [Medication]
@@ -9,5 +9,9 @@ struct User: Identifiable, Codable, Equatable {
         return lhs.id == rhs.id &&
                lhs.name == rhs.name &&
                lhs.medications == rhs.medications
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }

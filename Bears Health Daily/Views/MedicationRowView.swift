@@ -9,7 +9,7 @@ struct MedicationRowView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(medication.name)
                         .font(.headline)
-                    Text("When to take: \(medication.expectedTimes.joined(separator: ", "))")
+                    Text("何时服用: \(medication.expectedTimes.joined(separator: ", "))")
                         .font(.subheadline)
                 }
                 Spacer()

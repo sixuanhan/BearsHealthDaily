@@ -4,7 +4,7 @@ struct ExpectedTimesView: View {
     @Binding var expectedTimes: [String]
 
     var body: some View {
-        Section(header: Text("Expected Times")) {
+        Section(header: Text("规定吃药时间")) {
             List {
                 ForEach(expectedTimes.indices, id: \.self) { index in
                     TextField("Time \(index + 1)", text: $expectedTimes[index])
@@ -13,7 +13,7 @@ struct ExpectedTimesView: View {
                 Button(action: {
                     expectedTimes.append("")
                 }) {
-                    Label("Add Expected Time", systemImage: "plus")
+                    Label("增加规定吃药时间", systemImage: "plus")
                 }
             }
         }
@@ -29,10 +29,10 @@ struct ActualTimesView: View {
     @Binding var actualTimes: [Date]
 
 var body: some View {
-        Section(header: Text("Actual Times")) {
+        Section(header: Text("实际服用时间")) {
             List {
                 ForEach(actualTimes.indices, id: \.self) { index in
-                    DatePicker("Time \(index + 1)", selection: $actualTimes[index], displayedComponents: .hourAndMinute)
+                    DatePicker("次数 \(index + 1)", selection: $actualTimes[index], displayedComponents: .hourAndMinute)
                 }
                 .onDelete(perform: deleteActualTimes)
             }
@@ -54,14 +54,14 @@ struct AddNowView: View {
             Button(action: {
                 actualTimes.append(Date())
             }) {
-                Label("Add Actual Time", systemImage: "plus")
+                Label("记录吃药时间", systemImage: "plus")
             }
             Spacer()
             Spacer()
             Button(action: {
                 actualTimes.append(Date())
             }) {
-                Label("Add Now", systemImage: "clock")
+                Label("现在就吃", systemImage: "clock")
             }
             Spacer()
         }

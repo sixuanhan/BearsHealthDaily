@@ -4,6 +4,7 @@ struct MedicationFormView: View {
     @Binding var medication: Medication
     var onSave: () -> Void
     var onCancel: () -> Void
+    @Binding var users: [User]
 
     @State private var name: String = ""
     @State private var brand: String = ""
@@ -15,27 +16,40 @@ struct MedicationFormView: View {
     @State private var expectedTimes: [String] = []
     @State private var actualTimes: [Date] = []
     @State private var cycle: Int = 1
+    @State private var selectedUser: User?
 
     var body: some View {
         NavigationView {
             VStack {
                 Form {
-                    Section(header: Text("Medication Details").font(.headline)) {
-                        AlignedLabelTextField(label: "Name", text: $name)
-                        AlignedLabelTextField(label: "Brand", text: $brand)
-                        AlignedLabelTextField(label: "Description", text: $description)
-                        AlignedLabelValueField(label: "Dosage", value: $dosage, formatter: NumberFormatter())
-                        AlignedLabelTextField(label: "Dosage Unit", text: $dosageUnit)
-                        DatePicker("Start Date", selection: $startDate, displayedComponents: .date)
-                        AlignedLabelTextField(label: "How Bought", text: $howBought)
-                        AlignedLabelIntValueField(label: "Cycle (days)", value: $cycle, formatter: NumberFormatter())
+                    Section(header: Text("药物明细").font(.headline)) {
+                        AlignedLabelTextField(label: "名称", text: $name)
+                        AlignedLabelTextField(label: "品牌", text: $brand)
+                        AlignedLabelTextField(label: "描述", text: $description)
+                        AlignedLabelValueField(label: "用量", value: $dosage, formatter: NumberFormatter())
+                        AlignedLabelTextField(label: "用量单位", text: $dosageUnit)
+                        DatePicker("起始日期", selection: $startDate, displayedComponents: .date)
+                        AlignedLabelTextField(label: "购买渠道", text: $howBought)
+                        AlignedLabelIntValueField(label: "周期（天）", value: $cycle, formatter: NumberFormatter())
                     }
                     ExpectedTimesView(expectedTimes: $expectedTimes)
                     ActualTimesView(actualTimes: $actualTimes)
+                    Section(header: Text("复制药物").font(.headline)) {
+                        Picker("选择用户", selection: $selectedUser) {
+                            ForEach(users) { user in
+                                Text(user.name).tag(user as User?)
+                            }
+                        }
+                        .pickerStyle(MenuPickerStyle())
+                        Button("确认复制") {
+                            copyMedication()
+                        }
+                        .disabled(selectedUser == nil)
+                    }
                 }
                 HStack {
                     Spacer()
-                    Button("Cancel") {
+                    Button("取消") {
                         onCancel()
                         print("clicked cancel")
                     }
@@ -44,7 +58,7 @@ struct MedicationFormView: View {
                     .foregroundColor(.white)
                     .cornerRadius(8)
                     Spacer()
-                    Button("Save") {
+                    Button("保存") {
                         saveMedication()
                         onSave()
                         print("clicked save")
@@ -57,9 +71,12 @@ struct MedicationFormView: View {
                 }
                 .padding()
             }
-            .navigationTitle("Medication Form")
+            .navigationTitle("增/改药物")
             .onAppear {
                 loadMedication()
+                if selectedUser == nil, let firstUser = users.first {
+                    selectedUser = firstUser
+                }
             }
         }
     }
@@ -88,6 +105,16 @@ struct MedicationFormView: View {
         medication.expectedTimes = expectedTimes
         medication.actualTimes = actualTimes
         medication.cycle = cycle
+    }
+
+    private func copyMedication() {
+        guard let selectedUser = selectedUser else { return }
+        if let index = users.firstIndex(where: { $0.id == selectedUser.id }) {
+            var copiedMedication = medication
+            copiedMedication.id = UUID() // Assign a new ID to the copied medication
+            users[index].medications.append(copiedMedication)
+            print("Copied medication to user: \(users[index].name)")
+        }
     }
 }
 
@@ -139,5 +166,5 @@ struct AlignedLabelIntValueField: View {
 }
 
 #Preview {
-    MedicationFormView(medication: .constant(Medication(id: UUID(), name: "test med", brand: "some brand", description: "this is test", dosage: 0.5, dosageUnit: "pill", startDate: Date(), howBought: "wo maide", expectedTimes: [], actualTimes: [], cycle: 1)), onSave: {}, onCancel: {})
+    MedicationFormView(medication: .constant(Medication(id: UUID(), name: "test med", brand: "some brand", description: "this is test", dosage: 0.5, dosageUnit: "pill", startDate: Date(), howBought: "wo maide", expectedTimes: [], actualTimes: [], cycle: 1)), onSave: {}, onCancel: {}, users: .constant([User(id: UUID(), name: "Test User", medications: [])]))
 }

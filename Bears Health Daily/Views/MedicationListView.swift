@@ -2,12 +2,13 @@ import SwiftUI
 
 struct MedicationListView: View {
     @Binding var user: User
+    @Binding var users: [User]
 
     @State private var isPresentingAddMedication = false
     @State private var isPresentingEditMedication = false
     @State private var newMedication = Medication(id: UUID(), name: "", brand: "", description: "", dosage: 0.0, dosageUnit: "", startDate: Date(), howBought: "", expectedTimes: [], actualTimes: [], cycle: 1)
     @State private var selectedMedication: Medication?
-    @State private var editableMedication = Medication(id: UUID(), name: "", brand:"", description: "", dosage: 0.0, dosageUnit: "", startDate: Date(), howBought: "", expectedTimes: [], actualTimes: [], cycle: 1)
+    @State private var editableMedication = Medication(id: UUID(), name: "", brand: "", description: "", dosage: 0.0, dosageUnit: "", startDate: Date(), howBought: "", expectedTimes: [], actualTimes: [], cycle: 1)
     @State private var isEditMode = false
     @State private var navigationSelection: Medication?
 
@@ -39,14 +40,22 @@ struct MedicationListView: View {
                     }
                     .onDelete(perform: isEditMode ? deleteMedications : nil)
                 }
+                .scrollContentBackground(.hidden)
+                .background(Color(.systemGroupedBackground))
                 HStack {
                     Spacer()
-                    Button(action: { isPresentingAddMedication = true }) {
-                        Label("Add Medication", systemImage: "plus")
+                    Button(action: { 
+                        print("Add Medication button tapped")
+                        isPresentingAddMedication = true 
+                    }) {
+                        Label("添加新药", systemImage: "plus")
                     }
                     Spacer()
-                    Button(action: { isEditMode.toggle() }) {
-                        Label(isEditMode ? "Editing" : "Viewing", systemImage: isEditMode ? "pencil" : "eye")
+                    Button(action: { 
+                        print("Edit button tapped")
+                        isEditMode.toggle() 
+                    }) {
+                        Label(isEditMode ? "编辑中" : "浏览中", systemImage: isEditMode ? "pencil" : "eye")
                     }
                     Spacer()
                 }
@@ -61,9 +70,8 @@ struct MedicationListView: View {
                     addMedication()
                     isPresentingAddMedication = false
                 }, onCancel: {
-                    
                     isPresentingAddMedication = false
-                })
+                }, users: $users)
             }
             .sheet(isPresented: $isPresentingEditMedication) {
                 MedicationFormView(medication: $editableMedication, onSave: {
@@ -71,7 +79,7 @@ struct MedicationListView: View {
                     isPresentingEditMedication = false
                 }, onCancel: {
                     isPresentingEditMedication = false
-                })
+                }, users: $users)
             }
         }
     }
@@ -109,9 +117,14 @@ struct MedicationListView: View {
 }
 
 #Preview {
-    @Previewable @State var sampleUser = User(id: UUID(), name: "Sample User", medications: [
+    @State var sampleUser = User(id: UUID(), name: "Sample User", medications: [
         Medication(id: UUID(), name: "神奇的药", brand: "梦工厂", description: "我瞎编的", dosage: 1, dosageUnit: "粒", startDate: Date(), howBought: "买不到", expectedTimes: ["早", "中", "晚"], actualTimes: [], cycle: 1),
         Medication(id: UUID(), name: "Medication 2", brand: "brand 2", description: "Description 2", dosage: 5.0, dosageUnit: "ml", startDate: Date(), howBought: "", expectedTimes: ["12:00, 19:00"], actualTimes: [], cycle: 1)
     ])
-    MedicationListView(user: $sampleUser)
+    @State var allUsers = [
+        User(id: UUID(), name: "Sample User", medications: []),
+        User(id: UUID(), name: "User B", medications: []),
+        User(id: UUID(), name: "User C", medications: [])
+    ]
+    MedicationListView(user: $sampleUser, users: $allUsers)
 }
