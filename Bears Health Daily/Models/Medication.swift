@@ -1,6 +1,6 @@
 import Foundation
 
-struct Medication: Identifiable, Codable, Equatable {
+struct Medication: Identifiable, Codable, Equatable, Hashable {
     var id: UUID
     var name: String
     var brand: String
@@ -25,5 +25,9 @@ struct Medication: Identifiable, Codable, Equatable {
                lhs.expectedTimes == rhs.expectedTimes &&
                lhs.actualTimes == rhs.actualTimes &&
                 lhs.cycle == rhs.cycle
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }

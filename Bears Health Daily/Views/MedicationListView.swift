@@ -9,6 +9,7 @@ struct MedicationListView: View {
     @State private var selectedMedication: Medication?
     @State private var editableMedication = Medication(id: UUID(), name: "", brand:"", description: "", dosage: 0.0, dosageUnit: "", startDate: Date(), howBought: "", expectedTimes: [], actualTimes: [], cycle: 1)
     @State private var isEditMode = false
+    @State private var navigationSelection: Medication?
 
     var body: some View {
         NavigationStack {
@@ -22,8 +23,19 @@ struct MedicationListView: View {
                                     selectedMedication = medication
                                     editableMedication = medication
                                     isPresentingEditMedication = true
+                                } else {
+                                    navigationSelection = medication
                                 }
                             }
+                            .background(
+                                NavigationLink(
+                                    destination: MedicationDetailsView(medication: medication),
+                                    tag: medication,
+                                    selection: $navigationSelection,
+                                    label: { EmptyView() }
+                                )
+                                .hidden()
+                            )
                     }
                     .onDelete(perform: isEditMode ? deleteMedications : nil)
                 }
@@ -34,7 +46,7 @@ struct MedicationListView: View {
                     }
                     Spacer()
                     Button(action: { isEditMode.toggle() }) {
-                        Label(isEditMode ? "Done" : "Edit", systemImage: isEditMode ? "checkmark" : "pencil")
+                        Label(isEditMode ? "Editing" : "Viewing", systemImage: isEditMode ? "pencil" : "eye")
                     }
                     Spacer()
                 }
