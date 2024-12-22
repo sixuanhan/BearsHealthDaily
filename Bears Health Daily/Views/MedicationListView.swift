@@ -45,14 +45,12 @@ struct MedicationListView: View {
                 HStack {
                     Spacer()
                     Button(action: { 
-                        print("Add Medication button tapped")
                         isPresentingAddMedication = true 
                     }) {
                         Label("添加新药", systemImage: "plus")
                     }
                     Spacer()
                     Button(action: { 
-                        print("Edit button tapped")
                         isEditMode.toggle() 
                     }) {
                         Label(isEditMode ? "编辑中" : "浏览中", systemImage: isEditMode ? "pencil" : "eye")
@@ -108,7 +106,6 @@ struct MedicationListView: View {
             if let lastTime = medication.actualTimes.last {
                 let daysSinceLastTime = Calendar.current.dateComponents([.day], from: lastTime, to: now).day ?? 0
                 if daysSinceLastTime >= medication.cycle {
-                    print("Clearing actual times for medication: \(medication.name ?? "Unknown")")
                     user.medications[index].actualTimes.removeAll()
                 }
             }
@@ -117,11 +114,11 @@ struct MedicationListView: View {
 }
 
 #Preview {
-    @State var sampleUser = User(id: UUID(), name: "Sample User", medications: [
+    @Previewable @State var sampleUser = User(id: UUID(), name: "Sample User", medications: [
         Medication(id: UUID(), name: "神奇的药", brand: "梦工厂", description: "我瞎编的", dosage: 1, dosageUnit: "粒", startDate: Date(), howBought: "买不到", expectedTimes: ["早", "中", "晚"], actualTimes: [], cycle: 1),
         Medication(id: UUID(), name: "Medication 2", brand: "brand 2", description: "Description 2", dosage: 5.0, dosageUnit: "ml", startDate: Date(), howBought: "", expectedTimes: ["12:00, 19:00"], actualTimes: [], cycle: 1)
     ])
-    @State var allUsers = [
+    @Previewable @State var allUsers = [
         User(id: UUID(), name: "Sample User", medications: []),
         User(id: UUID(), name: "User B", medications: []),
         User(id: UUID(), name: "User C", medications: [])

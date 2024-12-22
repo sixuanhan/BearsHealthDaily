@@ -20,12 +20,13 @@ struct ContentView: View {
             }
         }
         .onAppear {
-//            if users.isEmpty {
+           if users.isEmpty {
                 addSampleData()
-//            }
+           }
         }
-        .onChange(of: users) { newValue in
-            UserDefaultsManager.shared.saveUsers(newValue)
+        .onChange(of: users) { 
+            UserDefaultsManager.shared.saveUsers(users)
+            print("Content: Saved")
         }
     }
 

@@ -17,6 +17,7 @@ struct MedicationFormView: View {
     @State private var actualTimes: [Date] = []
     @State private var cycle: Int = 1
     @State private var selectedUser: User?
+    @State private var showMessage: Bool = false
 
     var body: some View {
         NavigationView {
@@ -51,7 +52,6 @@ struct MedicationFormView: View {
                     Spacer()
                     Button("取消") {
                         onCancel()
-                        print("clicked cancel")
                     }
                     .padding()
                     .background(Color.red.opacity(0.7))
@@ -61,7 +61,6 @@ struct MedicationFormView: View {
                     Button("保存") {
                         saveMedication()
                         onSave()
-                        print("clicked save")
                     }
                     .padding()
                     .background(Color.blue)
@@ -70,6 +69,21 @@ struct MedicationFormView: View {
                     Spacer()
                 }
                 .padding()
+                if showMessage {
+                    Text("成功复制给了: \(selectedUser?.name ?? "")")
+                        .padding()
+                        .background(Color.green)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                        .transition(.opacity)
+                        .onAppear {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                withAnimation {
+                                    showMessage = false
+                                }
+                            }
+                        }
+                }
             }
             .navigationTitle("增/改药物")
             .onAppear {
@@ -113,7 +127,9 @@ struct MedicationFormView: View {
             var copiedMedication = medication
             copiedMedication.id = UUID() // Assign a new ID to the copied medication
             users[index].medications.append(copiedMedication)
-            print("Copied medication to user: \(users[index].name)")
+            withAnimation {
+                showMessage = true
+            }
         }
     }
 }
