@@ -27,6 +27,7 @@ struct ExpectedTimesView: View {
 
 struct ActualTimesView: View {
     @Binding var actualTimes: [Date]
+    var expectedTimes: [String]
 
 var body: some View {
         Section(header: Text("实际服用时间")) {
@@ -36,7 +37,7 @@ var body: some View {
                 }
                 .onDelete(perform: deleteActualTimes)
             }
-            AddNowView(actualTimes: $actualTimes)
+            AddNowView(actualTimes: $actualTimes, expectedTimes: expectedTimes)
             .buttonStyle(BorderlessButtonStyle())
         }
     }
@@ -48,26 +49,47 @@ var body: some View {
 
 struct AddNowView: View {
     @Binding var actualTimes: [Date]
+    var expectedTimes: [String]
+    @State private var showAlert = false
+
     var body: some View {
         VStack {
             Spacer()
             Button(action: {
-                actualTimes.append(Date())
+                if actualTimes.count < expectedTimes.count {
+                    actualTimes.append(Date())
+                } else {
+                    showAlert = true
+                }
             }) {
                 Label("记录吃药时间", systemImage: "plus")
             }
             Spacer()
             Spacer()
             Button(action: {
-                actualTimes.append(Date())
+                if actualTimes.count < expectedTimes.count {
+                    actualTimes.append(Date())
+                } else {
+                    showAlert = true
+                }
             }) {
                 Label("现在就吃", systemImage: "clock")
             }
             Spacer()
         }
+        .alert(isPresented: $showAlert) {
+            Alert(
+                title: Text("警告"),
+                message: Text("你不需要再吃药了"),
+                primaryButton: .default(Text("确定")),
+                secondaryButton: .destructive(Text("依然吃药"), action: {
+                    actualTimes.append(Date())
+                })
+            )
+        }
     }
 }
 
 #Preview {
-    AddNowView(actualTimes: .constant([]))
+    AddNowView(actualTimes: .constant([]), expectedTimes: ["Morning", "Afternoon", "Evening"])
 }

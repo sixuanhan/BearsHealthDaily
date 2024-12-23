@@ -34,7 +34,7 @@ struct MedicationFormView: View {
                         AlignedLabelIntValueField(label: "周期（天）", value: $cycle, formatter: NumberFormatter())
                     }
                     ExpectedTimesView(expectedTimes: $expectedTimes)
-                    ActualTimesView(actualTimes: $actualTimes)
+                    ActualTimesView(actualTimes: $actualTimes, expectedTimes: expectedTimes)
                     Section(header: Text("复制药物").font(.headline)) {
                         Picker("选择用户", selection: $selectedUser) {
                             ForEach(users) { user in
@@ -69,20 +69,8 @@ struct MedicationFormView: View {
                     Spacer()
                 }
                 .padding()
-                if showMessage {
-                    Text("成功复制给了: \(selectedUser?.name ?? "")")
-                        .padding()
-                        .background(Color.green)
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
-                        .transition(.opacity)
-                        .onAppear {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                                withAnimation {
-                                    showMessage = false
-                                }
-                            }
-                        }
+                .alert(isPresented: $showMessage) {
+                    Alert(title: Text("复制成功"), message: Text("成功复制给了: \(selectedUser?.name ?? "")"), dismissButton: .default(Text("OK")))
                 }
             }
             .navigationTitle("增/改药物")
