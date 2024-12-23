@@ -66,6 +66,6 @@ struct MedicationDetailsView: View {
 }
 
 #Preview {
-    MedicationDetailsView(medication: Medication(id: UUID(), name: "神奇的药", brand: "梦工厂", description: "我瞎编的", dosage: 1, dosageUnit: "粒", startDate: Date(), howBought: "买不到", expectedTimes: ["早", "中", "晚"], actualTimes: [], cycle: 1))
+    MedicationDetailsView(medication: Medication(id: UUID(), name: "神奇的药", brand: "梦工厂"))
         .padding()
 }

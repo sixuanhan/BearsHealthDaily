@@ -12,6 +12,22 @@ struct Medication: Identifiable, Codable, Equatable, Hashable {
     var expectedTimes: [String]
     var actualTimes: [Date]
     var cycle: Int
+    var lastClearedDate: Date
+
+    init(id: UUID = UUID(), name: String, brand: String) {
+        self.id = id
+        self.name = name
+        self.brand = brand
+        self.description = ""
+        self.dosage = 1
+        self.dosageUnit = "粒"
+        self.startDate = Date()
+        self.howBought = ""
+        self.expectedTimes = []
+        self.actualTimes = []
+        self.cycle = 1
+        self.lastClearedDate = startDate
+    }
 
     static func == (lhs: Medication, rhs: Medication) -> Bool {
         return lhs.id == rhs.id &&
@@ -24,7 +40,8 @@ struct Medication: Identifiable, Codable, Equatable, Hashable {
                 lhs.howBought == rhs.howBought &&
                lhs.expectedTimes == rhs.expectedTimes &&
                lhs.actualTimes == rhs.actualTimes &&
-                lhs.cycle == rhs.cycle
+                lhs.cycle == rhs.cycle &&
+                lhs.lastClearedDate == rhs.lastClearedDate
     }
 
     func hash(into hasher: inout Hasher) {

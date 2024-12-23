@@ -113,7 +113,7 @@ struct MedicationFormView: View {
         guard let selectedUser = selectedUser else { return }
         if let index = users.firstIndex(where: { $0.id == selectedUser.id }) {
             var copiedMedication = medication
-            copiedMedication.id = UUID() // Assign a new ID to the copied medication
+            copiedMedication.id = UUID()
             users[index].medications.append(copiedMedication)
             withAnimation {
                 showMessage = true
@@ -170,5 +170,5 @@ struct AlignedLabelIntValueField: View {
 }
 
 #Preview {
-    MedicationFormView(medication: .constant(Medication(id: UUID(), name: "test med", brand: "some brand", description: "this is test", dosage: 0.5, dosageUnit: "pill", startDate: Date(), howBought: "wo maide", expectedTimes: [], actualTimes: [], cycle: 1)), onSave: {}, onCancel: {}, users: .constant([User(id: UUID(), name: "Test User", medications: [])]))
+    MedicationFormView(medication: .constant(Medication(id: UUID(), name: "test med", brand: "some brand")), onSave: {}, onCancel: {}, users: .constant([User(id: UUID(), name: "Test User", medications: [])]))
 }
