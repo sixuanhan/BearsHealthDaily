@@ -20,6 +20,9 @@ struct MedicationListView: View {
                 ActionButtons(isEditMode: $isEditMode, isPresentingAddMedication: $isPresentingAddMedication)
             }
             .navigationTitle(user.name)
+            .navigationDestination(for: Medication.self) { medication in
+                MedicationDetailsView(medication: medication)
+            }
             .onAppear {
                 checkAndClearActualTimes()
             }
@@ -86,11 +89,24 @@ var body: some View {
         List {
             ForEach(user.medications.indices, id: \.self) { index in
                 let medication = user.medications[index]
-                MedicationRowView(medication: $user.medications[index])
+                MedicationRowView(
+                    medication: $user.medications[index],
+                    isEditMode: $isEditMode,
+                    navigationSelection: $navigationSelection,
+                    selectedMedication: $selectedMedication,
+                    editableMedication: $editableMedication,
+                    isPresentingEditMedication: $isPresentingEditMedication
+                )
                     .listRowBackground(Color.clear)
-                    .onTapGesture {
-                        handleTapGesture(for: medication)
-                    }
+                    .background(
+                        NavigationLink(
+                            destination: MedicationDetailsView(medication: medication),
+                            tag: medication,
+                            selection: $navigationSelection,
+                            label: { EmptyView() }
+                        )
+                        .hidden()
+                    )
             }
             .onDelete(perform: isEditMode ? deleteMedications : nil)
         }
@@ -98,15 +114,6 @@ var body: some View {
         .background(Color(.systemGroupedBackground))
     }
 
-    private func handleTapGesture(for medication: Medication) {
-        if isEditMode {
-            selectedMedication = medication
-            editableMedication = medication
-            isPresentingEditMedication = true
-        } else {
-            navigationSelection = medication
-        }
-    }
 
     private func deleteMedications(at offsets: IndexSet) {
         user.medications.remove(atOffsets: offsets)
@@ -118,20 +125,10 @@ struct ActionButtons: View {
     @Binding var isPresentingAddMedication: Bool
 
     var body: some View {
-        HStack {
-            Spacer()
-            Button(action: { 
-                isPresentingAddMedication = true 
-            }) {
-                Label("添加新药", systemImage: "plus")
-            }
-            Spacer()
-            Button(action: { 
-                isEditMode.toggle() 
-            }) {
-                Label(isEditMode ? "编辑中" : "浏览中", systemImage: isEditMode ? "pencil" : "eye")
-            }
-            Spacer()
+        Button(action: { 
+            isPresentingAddMedication = true 
+        }) {
+            Label("添加新药", systemImage: "plus")
         }
         .padding()
     }
