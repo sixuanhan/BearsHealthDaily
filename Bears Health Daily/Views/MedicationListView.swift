@@ -15,9 +15,18 @@ struct MedicationListView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                MedicationList(user: $user, isEditMode: $isEditMode, navigationSelection: $navigationSelection, selectedMedication: $selectedMedication, editableMedication: $editableMedication, isPresentingEditMedication: $isPresentingEditMedication)
-                Spacer()
-                ActionButtons(isEditMode: $isEditMode, isPresentingAddMedication: $isPresentingAddMedication)
+                MedicationList(
+                    user: $user,
+                    isEditMode: $isEditMode,
+                    navigationSelection: $navigationSelection,
+                    selectedMedication: $selectedMedication,
+                    editableMedication: $editableMedication,
+                    isPresentingEditMedication: $isPresentingEditMedication
+                )
+                ActionButtons(
+                    isEditMode: $isEditMode,
+                    isPresentingAddMedication: $isPresentingAddMedication
+                )
             }
             .navigationTitle(user.name)
             .navigationDestination(for: Medication.self) { medication in
@@ -87,10 +96,9 @@ struct MedicationList: View {
 
 var body: some View {
         List {
-            ForEach(user.medications.indices, id: \.self) { index in
-                let medication = user.medications[index]
+            ForEach(sortedMedications, id: \.id) { medication in
                 MedicationRowView(
-                    medication: $user.medications[index],
+                    medication: binding(for: medication),
                     isEditMode: $isEditMode,
                     navigationSelection: $navigationSelection,
                     selectedMedication: $selectedMedication,
@@ -114,9 +122,22 @@ var body: some View {
         .background(Color(.systemGroupedBackground))
     }
 
+    private var sortedMedications: [Medication] {
+        let sortedMedications = user.medications.sorted {
+            ($0.actualTimes.count < $0.expectedTimes.count) && !($1.actualTimes.count < $1.expectedTimes.count)
+        }
+        return sortedMedications
+    }
 
     private func deleteMedications(at offsets: IndexSet) {
         user.medications.remove(atOffsets: offsets)
+    }
+
+    private func binding(for medication: Medication) -> Binding<Medication> {
+        guard let index = user.medications.firstIndex(where: { $0.id == medication.id }) else {
+            fatalError("Medication not found")
+        }
+        return $user.medications[index]
     }
 }
 
@@ -125,10 +146,12 @@ struct ActionButtons: View {
     @Binding var isPresentingAddMedication: Bool
 
     var body: some View {
-        Button(action: { 
-            isPresentingAddMedication = true 
-        }) {
-            Label("添加新药", systemImage: "plus")
+        HStack {
+            Button(action: { 
+                isPresentingAddMedication = true 
+            }) {
+                Label("添加新药", systemImage: "plus")
+            }
         }
         .padding()
     }
