@@ -15,49 +15,9 @@ struct MedicationListView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                List {
-                    ForEach(user.medications) { medication in
-                        MedicationRowView(medication: medication)
-                            .listRowBackground(Color.clear)
-                            .onTapGesture {
-                                if isEditMode {
-                                    selectedMedication = medication
-                                    editableMedication = medication
-                                    isPresentingEditMedication = true
-                                } else {
-                                    navigationSelection = medication
-                                }
-                            }
-                            .background(
-                                NavigationLink(
-                                    destination: MedicationDetailsView(medication: medication),
-                                    tag: medication,
-                                    selection: $navigationSelection,
-                                    label: { EmptyView() }
-                                )
-                                .hidden()
-                            )
-                    }
-                    .onDelete(perform: isEditMode ? deleteMedications : nil)
-                }
-                .scrollContentBackground(.hidden)
-                .background(Color(.systemGroupedBackground))
-                HStack {
-                    Spacer()
-                    Button(action: { 
-                        isPresentingAddMedication = true 
-                    }) {
-                        Label("添加新药", systemImage: "plus")
-                    }
-                    Spacer()
-                    Button(action: { 
-                        isEditMode.toggle() 
-                    }) {
-                        Label(isEditMode ? "编辑中" : "浏览中", systemImage: isEditMode ? "pencil" : "eye")
-                    }
-                    Spacer()
-                }
-                .padding()
+                MedicationList(user: $user, isEditMode: $isEditMode, navigationSelection: $navigationSelection, selectedMedication: $selectedMedication, editableMedication: $editableMedication, isPresentingEditMedication: $isPresentingEditMedication)
+                Spacer()
+                ActionButtons(isEditMode: $isEditMode, isPresentingAddMedication: $isPresentingAddMedication)
             }
             .navigationTitle(user.name)
             .onAppear {
@@ -95,10 +55,6 @@ struct MedicationListView: View {
         }
     }
 
-    private func deleteMedications(at offsets: IndexSet) {
-        user.medications.remove(atOffsets: offsets)
-    }
-
     private func checkAndClearActualTimes() {
         let now = roundToMidnight(date: Date())
         for index in user.medications.indices {
@@ -115,6 +71,69 @@ struct MedicationListView: View {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month, .day], from: date)
         return calendar.date(from: components) ?? date
+    }
+}
+
+struct MedicationList: View {
+    @Binding var user: User
+    @Binding var isEditMode: Bool
+    @Binding var navigationSelection: Medication?
+    @Binding var selectedMedication: Medication?
+    @Binding var editableMedication: Medication
+    @Binding var isPresentingEditMedication: Bool
+
+var body: some View {
+        List {
+            ForEach(user.medications.indices, id: \.self) { index in
+                let medication = user.medications[index]
+                MedicationRowView(medication: $user.medications[index])
+                    .listRowBackground(Color.clear)
+                    .onTapGesture {
+                        handleTapGesture(for: medication)
+                    }
+            }
+            .onDelete(perform: isEditMode ? deleteMedications : nil)
+        }
+        .scrollContentBackground(.hidden)
+        .background(Color(.systemGroupedBackground))
+    }
+
+    private func handleTapGesture(for medication: Medication) {
+        if isEditMode {
+            selectedMedication = medication
+            editableMedication = medication
+            isPresentingEditMedication = true
+        } else {
+            navigationSelection = medication
+        }
+    }
+
+    private func deleteMedications(at offsets: IndexSet) {
+        user.medications.remove(atOffsets: offsets)
+    }
+}
+
+struct ActionButtons: View {
+    @Binding var isEditMode: Bool
+    @Binding var isPresentingAddMedication: Bool
+
+    var body: some View {
+        HStack {
+            Spacer()
+            Button(action: { 
+                isPresentingAddMedication = true 
+            }) {
+                Label("添加新药", systemImage: "plus")
+            }
+            Spacer()
+            Button(action: { 
+                isEditMode.toggle() 
+            }) {
+                Label(isEditMode ? "编辑中" : "浏览中", systemImage: isEditMode ? "pencil" : "eye")
+            }
+            Spacer()
+        }
+        .padding()
     }
 }
 

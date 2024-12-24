@@ -1,7 +1,8 @@
 import SwiftUI
 
 struct MedicationRowView: View {
-    var medication: Medication
+    @Binding var medication: Medication
+    @State private var showAlert = false
 
     var body: some View {
         // NavigationLink(destination: MedicationDetailsView(medication: medication)) {
@@ -13,11 +14,33 @@ struct MedicationRowView: View {
                         .font(.subheadline)
                 }
                 Spacer()
-                Text("\(medication.actualTimes.count)/\(medication.expectedTimes.count)")
-                    .font(.headline)
+                VStack {
+                    Button(action: {
+                        if medication.actualTimes.count < medication.expectedTimes.count {
+                            medication.actualTimes.append(Date())
+                        } else {
+                            showAlert = true
+                        }
+                    }) {
+                        Text("服用")
+                    }
+                    Spacer()
+                    Text("\(medication.actualTimes.count)/\(medication.expectedTimes.count)")
+                        .font(.headline)
+                }
                 }
                 .contentShape(Rectangle())
                 .padding()
+                .alert(isPresented: $showAlert) {
+                    Alert(
+                        title: Text("警告"),
+                        message: Text("你不需要再吃药了"),
+                        primaryButton: .default(Text("确定")),
+                        secondaryButton: .destructive(Text("依然吃药"), action: {
+                            medication.actualTimes.append(Date())
+                        })
+                    )
+                }
                 .frame(maxWidth: .infinity)
                 .background(
                     RoundedRectangle(cornerRadius: 10)
@@ -30,7 +53,7 @@ struct MedicationRowView: View {
 
 #Preview {
     NavigationView {
-        MedicationRowView(medication: Medication(id: UUID(), name: "神奇的药", brand: "梦工厂"))
+        MedicationRowView(medication: .constant(Medication(id: UUID(), name: "Paracetamol", brand: "Generic")))
             .padding()
     }
 }
