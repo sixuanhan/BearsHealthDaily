@@ -19,12 +19,8 @@ struct MedicationRowView: View {
                         .font(.subheadline)
                 }
                 Spacer()
-                VStack {
-                    Text("\(medication.actualTimes.count)/\(medication.expectedTimes.count)")
-                        .font(.headline)
-                    
-                    Spacer()
-                }
+                Text("\(medication.actualTimes.count)/\(medication.expectedTimes.count)")
+                    .font(.headline)
             }
 
             Spacer()
@@ -36,7 +32,8 @@ struct MedicationRowView: View {
                     Text("查看")
                         .font(.headline)
                         .foregroundColor(.white)
-                        .padding()
+                        .padding(.vertical, 1.5)
+                        .padding(.horizontal, 16)
                         .background(Color.green)
                         .cornerRadius(10)
                         .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
@@ -52,8 +49,8 @@ struct MedicationRowView: View {
                     Text("编辑")
                         .font(.headline)
                         .foregroundColor(.white)
-                        .padding()
-                        .background(Color.orange)
+                        .padding(.vertical, 1.5)
+                        .padding(.horizontal, 16)                        .background(Color.orange)
                         .cornerRadius(10)
                         .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
                 }
@@ -70,8 +67,8 @@ struct MedicationRowView: View {
                     Text("服用")
                         .font(.headline)
                         .foregroundColor(.white)
-                        .padding()
-                        .background(Color.blue)
+                        .padding(.vertical, 1.5)
+                        .padding(.horizontal, 16)                        .background(Color.blue)
                         .cornerRadius(10)
                         .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
                 }
@@ -89,7 +86,7 @@ struct MedicationRowView: View {
             .buttonStyle(BorderlessButtonStyle())
         }
         .contentShape(Rectangle())
-        .padding()
+        .padding(.vertical, 4)
         .frame(maxWidth: .infinity)
         .background(
             RoundedRectangle(cornerRadius: 10)
