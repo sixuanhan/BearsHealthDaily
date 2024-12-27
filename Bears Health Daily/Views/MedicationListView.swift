@@ -41,13 +41,19 @@ struct MedicationListView: View {
                     isPresentingAddMedication = false
                 }, onCancel: {
                     isPresentingAddMedication = false
-                }, users: $users)
+                }, onDelete: {
+                    deleteMedication(editableMedication)
+                    isPresentingEditMedication = false
+                },users: $users)
             }
             .sheet(isPresented: $isPresentingEditMedication) {
                 MedicationFormView(medication: $editableMedication, onSave: {
                     saveMedication()
                     isPresentingEditMedication = false
                 }, onCancel: {
+                    isPresentingEditMedication = false
+                }, onDelete: {
+                    deleteMedication(editableMedication)
                     isPresentingEditMedication = false
                 }, users: $users)
             }
@@ -60,10 +66,21 @@ struct MedicationListView: View {
         newMedication = Medication(id: UUID(), name: "", brand: "")
     }
 
+
+    private func deleteMedications(at offsets: IndexSet) {
+        user.medications.remove(atOffsets: offsets)
+    }
+
     // modify the selected medication
     private func saveMedication() {
         if let index = user.medications.firstIndex(where: { $0.id == selectedMedication?.id }) {
             user.medications[index] = editableMedication
+        }
+    }
+
+    private func deleteMedication(_ medication: Medication) {
+        if let index = user.medications.firstIndex(where: { $0.id == medication.id }) {
+            user.medications.remove(at: index)
         }
     }
 

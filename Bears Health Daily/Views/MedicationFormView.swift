@@ -4,6 +4,7 @@ struct MedicationFormView: View {
     @Binding var medication: Medication
     var onSave: () -> Void
     var onCancel: () -> Void
+    var onDelete: () -> Void
     @Binding var users: [User]
 
     @State private var name: String = ""
@@ -50,14 +51,26 @@ struct MedicationFormView: View {
                 }
                 HStack {
                     Spacer()
+
                     Button("取消") {
                         onCancel()
                     }
                     .padding()
-                    .background(Color.red.opacity(0.7))
+                    .background(Color.gray)
+                    .foregroundColor(.white)
+                    .cornerRadius(8)
+
+                    Spacer()
+
+                    Button("删除") {
+                        onDelete()
+                    }
+                    .padding()
+                    .background(Color.red)
                     .foregroundColor(.white)
                     .cornerRadius(8)
                     Spacer()
+
                     Button("保存") {
                         saveMedication()
                         onSave()
@@ -66,6 +79,7 @@ struct MedicationFormView: View {
                     .background(Color.blue)
                     .foregroundColor(.white)
                     .cornerRadius(8)
+
                     Spacer()
                 }
                 .padding()
@@ -170,5 +184,5 @@ struct AlignedLabelIntValueField: View {
 }
 
 #Preview {
-    MedicationFormView(medication: .constant(Medication(id: UUID(), name: "test med", brand: "some brand")), onSave: {}, onCancel: {}, users: .constant([User(id: UUID(), name: "Test User", medications: [])]))
+    MedicationFormView(medication: .constant(Medication(id: UUID(), name: "test med", brand: "some brand")), onSave: {}, onCancel: {}, onDelete: {}, users: .constant([User(id: UUID(), name: "Test User", medications: [])]))
 }
