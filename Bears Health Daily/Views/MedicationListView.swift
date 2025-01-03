@@ -25,7 +25,8 @@ struct MedicationListView: View {
                 )
                 ActionButtons(
                     isEditMode: $isEditMode,
-                    isPresentingAddMedication: $isPresentingAddMedication
+                    isPresentingAddMedication: $isPresentingAddMedication,
+                    clearAllActualTimes: clearAllActualTimes
                 )
             }
             .navigationTitle(user.name)
@@ -101,6 +102,14 @@ struct MedicationListView: View {
         let components = calendar.dateComponents([.year, .month, .day], from: date)
         return calendar.date(from: components) ?? date
     }
+
+    private func clearAllActualTimes() {
+        let now = roundToMidnight(date: Date())
+        for index in user.medications.indices {
+            user.medications[index].actualTimes.removeAll()
+            user.medications[index].lastClearedDate = now!
+        }
+    }
 }
 
 struct MedicationList: View {
@@ -161,14 +170,23 @@ var body: some View {
 struct ActionButtons: View {
     @Binding var isEditMode: Bool
     @Binding var isPresentingAddMedication: Bool
+    var clearAllActualTimes: () -> Void
 
     var body: some View {
         HStack {
+            Spacer()
             Button(action: { 
                 isPresentingAddMedication = true 
             }) {
                 Label("添加新药", systemImage: "plus")
             }
+            Spacer()
+            Button(action: { 
+                clearAllActualTimes()
+            }) {
+                Label("服用记录归零", systemImage: "trash")
+            }
+            Spacer()
         }
         .padding()
     }

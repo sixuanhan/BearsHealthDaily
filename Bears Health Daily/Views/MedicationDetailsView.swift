@@ -36,6 +36,9 @@ struct MedicationDetailsView: View {
                 Text("周期（天）: \(medication.cycle)")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
+                Text("上次清零日期: \(medication.lastClearedDate)")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
             }
             Spacer()
             Text("\(medication.actualTimes.count)/\(medication.expectedTimes.count)")
