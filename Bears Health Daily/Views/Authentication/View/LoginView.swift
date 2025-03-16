@@ -16,6 +16,8 @@ struct LoginView: View {
     var body: some View {
         NavigationStack {
             VStack {
+                Spacer()
+                
                 // form fields
                 VStack(spacing: 24) {
                     InputView(text: $email,

@@ -24,7 +24,7 @@ struct HomeView: View {
                     Text("正在加载...")
                         .navigationTitle("我的主页")
                 }
-            }
+            }       
         }
         .onAppear {
             Task {
@@ -66,4 +66,5 @@ struct HomeView: View {
 
 #Preview {
     HomeView()
+        .environmentObject(AuthViewModel())
 }

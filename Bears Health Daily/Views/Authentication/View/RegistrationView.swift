@@ -21,6 +21,8 @@ struct RegistrationView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 9) {
+            Spacer()
+
             InputView(text: $email,
                       title: "电子邮箱",
                       placeholder: "name@example.com")
@@ -80,12 +82,12 @@ struct RegistrationView: View {
                     }
                 }
                 
-            }
-            
-            
+            }      
         }
         .padding(.horizontal)
         .padding(.top, 12)
+        
+        Spacer()
         
         Button {
             Task {

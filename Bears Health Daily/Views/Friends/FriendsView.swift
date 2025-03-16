@@ -19,62 +19,65 @@ struct FriendsView: View {
 
     var body: some View {
         NavigationView {
-            VStack {      
-                searchField
-                
-                if friends.isEmpty {
-                    noFriendsPlaceholder
-                } else {
-                    friendsList
-                }
-            }
-            .navigationTitle("好友")
-            .toolbar {
-                ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    NavigationLink(destination: FriendRequestsView(), isActive: $isFriendRequestsViewPresented) {
-                        Button(action: {
-                            isFriendRequestsViewPresented.toggle()
-                        }) {
-                            Image(systemName: "bell")
-                                .imageScale(.large)
-                                .foregroundColor(.blue)
-                                .overlay(
-                                    Group {
-                                        if unreadRequestsCount > 0 {
-                                            Text("\(unreadRequestsCount)")
-                                                .font(.caption2)
-                                                .foregroundColor(.white)
-                                                .padding(3)
-                                                .background(Color.red)
-                                                .clipShape(Circle())
-                                                .offset(x: 9, y: -12)
-                                        }
-                                    }
-                                )
+            splashImageBackground
+                .overlay(
+                    VStack {      
+                        searchField
+                        
+                        if friends.isEmpty {
+                            noFriendsPlaceholder
+                        } else {
+                            friendsList
                         }
                     }
-                    
-                    NavigationLink(destination: SearchView(), isActive: $isSearchViewPresented) {
-                        Button(action: {
-                            isSearchViewPresented.toggle()
-                        }) {
-                            Image(systemName: "person.badge.plus")
-                                .imageScale(.large)
+                    .navigationTitle("好友")
+                    .toolbar {
+                        ToolbarItemGroup(placement: .navigationBarTrailing) {
+                            NavigationLink(destination: FriendRequestsView(), isActive: $isFriendRequestsViewPresented) {
+                                Button(action: {
+                                    isFriendRequestsViewPresented.toggle()
+                                }) {
+                                    Image(systemName: "bell")
+                                        .imageScale(.large)
+                                        .foregroundColor(.blue)
+                                        .overlay(
+                                            Group {
+                                                if unreadRequestsCount > 0 {
+                                                    Text("\(unreadRequestsCount)")
+                                                        .font(.caption2)
+                                                        .foregroundColor(.white)
+                                                        .padding(3)
+                                                        .background(Color.red)
+                                                        .clipShape(Circle())
+                                                        .offset(x: 9, y: -12)
+                                                }
+                                            }
+                                        )
+                                }
+                            }
+                            
+                            NavigationLink(destination: SearchView(), isActive: $isSearchViewPresented) {
+                                Button(action: {
+                                    isSearchViewPresented.toggle()
+                                }) {
+                                    Image(systemName: "person.badge.plus")
+                                        .imageScale(.large)
+                                }
+                            }
                         }
                     }
-                }
-            }
-            .onChange(of: searchText) { newValue in
-                Task {
-                    await fetchFriends(query: searchText)
-                }
-            }
-            .onAppear {
-                Task {
-                    await fetchFriendRequestCount()
-                    await fetchFriends(query: "")
-                }
-            }
+                    .onChange(of: searchText) { newValue in
+                        Task {
+                            await fetchFriends(query: searchText)
+                        }
+                    }
+                    .onAppear {
+                        Task {
+                            await fetchFriendRequestCount()
+                            await fetchFriends(query: "")
+                        }
+                    }
+                )
         }
     }
     
@@ -109,16 +112,16 @@ struct FriendsView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 30, height: 30)
-                .foregroundColor(.gray)
+                .foregroundColor(.primary)
             
             Text("没有找到好友！")
                 .font(.title2)
                 .fontWeight(.bold)
-                .foregroundColor(.gray)
+                .foregroundColor(.primary)
                 .padding(.top, 20)
             
             Text("查找并添加您的好友以查看他们的进度。")
-                .foregroundColor(.gray)
+                .foregroundColor(.primary)
                 .font(.system(size: 15))
                 .padding(.top, 3)
             
@@ -229,6 +232,17 @@ struct FriendsView: View {
             }
         }
         return true
+    }
+
+    private var splashImageBackground: some View {
+        GeometryReader { geometry in
+            Image("heart_bear")
+                .resizable()
+                .opacity(0.5)
+                .scaledToFill()
+                .edgesIgnoringSafeArea(.all)
+                .frame(width: geometry.size.width)
+        }
     }
 }
 

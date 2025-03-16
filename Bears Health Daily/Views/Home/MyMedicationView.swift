@@ -63,6 +63,7 @@ struct MyMedicationView: View {
                 }
             }
         }
+        .background(.clear)
     }
 
     // modify the new medication and add it to the list
