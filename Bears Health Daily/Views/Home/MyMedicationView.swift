@@ -1,8 +1,8 @@
 import SwiftUI
 
-struct MedicationListView: View {
+struct MyMedicationView: View {
     @Binding var user: User
-    @Binding var users: [User]
+    @EnvironmentObject var viewModel: AuthViewModel
 
     @State private var isPresentingAddMedication = false
     @State private var isPresentingEditMedication = false
@@ -15,7 +15,7 @@ struct MedicationListView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                MedicationList(
+                MedicationListView(
                     user: $user,
                     isEditMode: $isEditMode,
                     navigationSelection: $navigationSelection,
@@ -29,7 +29,6 @@ struct MedicationListView: View {
                     clearAllActualTimes: clearAllActualTimes
                 )
             }
-            .navigationTitle(user.name)
             .navigationDestination(for: Medication.self) { medication in
                 MedicationDetailsView(medication: medication)
             }
@@ -45,7 +44,7 @@ struct MedicationListView: View {
                 }, onDelete: {
                     deleteMedication(editableMedication)
                     isPresentingEditMedication = false
-                },users: $users)
+                })
             }
             .sheet(isPresented: $isPresentingEditMedication) {
                 MedicationFormView(medication: $editableMedication, onSave: {
@@ -56,7 +55,12 @@ struct MedicationListView: View {
                 }, onDelete: {
                     deleteMedication(editableMedication)
                     isPresentingEditMedication = false
-                }, users: $users)
+                })
+            }
+            .onChange(of: user) { newUser in
+                Task {
+                    await viewModel.updateUserInFirestore(newUser)
+                }
             }
         }
     }
@@ -66,7 +70,6 @@ struct MedicationListView: View {
         user.medications.append(newMedication)
         newMedication = Medication(id: UUID(), name: "", brand: "")
     }
-
 
     private func deleteMedications(at offsets: IndexSet) {
         user.medications.remove(atOffsets: offsets)
@@ -112,61 +115,6 @@ struct MedicationListView: View {
     }
 }
 
-struct MedicationList: View {
-    @Binding var user: User
-    @Binding var isEditMode: Bool
-    @Binding var navigationSelection: Medication?
-    @Binding var selectedMedication: Medication?
-    @Binding var editableMedication: Medication
-    @Binding var isPresentingEditMedication: Bool
-
-var body: some View {
-        List {
-            ForEach(sortedMedications, id: \.id) { medication in
-                MedicationRowView(
-                    medication: binding(for: medication),
-                    isEditMode: $isEditMode,
-                    navigationSelection: $navigationSelection,
-                    selectedMedication: $selectedMedication,
-                    editableMedication: $editableMedication,
-                    isPresentingEditMedication: $isPresentingEditMedication
-                )
-                    .listRowBackground(Color.clear)
-                    .background(
-                        NavigationLink(
-                            destination: MedicationDetailsView(medication: medication),
-                            tag: medication,
-                            selection: $navigationSelection,
-                            label: { EmptyView() }
-                        )
-                        .hidden()
-                    )
-            }
-            .onDelete(perform: isEditMode ? deleteMedications : nil)
-        }
-        .scrollContentBackground(.hidden)
-        .background(Color(.systemGroupedBackground))
-    }
-
-    private var sortedMedications: [Medication] {
-        let sortedMedications = user.medications.sorted {
-            ($0.actualTimes.count < $0.expectedTimes.count) && !($1.actualTimes.count < $1.expectedTimes.count)
-        }
-        return sortedMedications
-    }
-
-    private func deleteMedications(at offsets: IndexSet) {
-        user.medications.remove(atOffsets: offsets)
-    }
-
-    private func binding(for medication: Medication) -> Binding<Medication> {
-        guard let index = user.medications.firstIndex(where: { $0.id == medication.id }) else {
-            fatalError("Medication not found")
-        }
-        return $user.medications[index]
-    }
-}
-
 struct ActionButtons: View {
     @Binding var isEditMode: Bool
     @Binding var isPresentingAddMedication: Bool
@@ -193,14 +141,6 @@ struct ActionButtons: View {
 }
 
 #Preview {
-    @Previewable @State var sampleUser = User(id: UUID(), name: "Sample User", medications: [
-        Medication(id: UUID(), name: "神奇的药", brand: "梦工厂"),
-        Medication(id: UUID(), name: "Medication 2", brand: "brand 2")
-    ])
-    @Previewable @State var allUsers = [
-        User(id: UUID(), name: "Sample User", medications: []),
-        User(id: UUID(), name: "User B", medications: []),
-        User(id: UUID(), name: "User C", medications: [])
-    ]
-    MedicationListView(user: $sampleUser, users: $allUsers)
+    MyMedicationView(user: .constant(User(id: UUID().uuidString, username: "some username", email: "some email", medications: [Medication(id: UUID(), name: "some name", brand: "some brand")])))
+    .environmentObject(AuthViewModel())
 }

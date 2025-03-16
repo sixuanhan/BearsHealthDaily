@@ -5,7 +5,6 @@ struct MedicationFormView: View {
     var onSave: () -> Void
     var onCancel: () -> Void
     var onDelete: () -> Void
-    @Binding var users: [User]
 
     @State private var name: String = ""
     @State private var brand: String = ""
@@ -17,7 +16,6 @@ struct MedicationFormView: View {
     @State private var expectedTimes: [String] = []
     @State private var actualTimes: [Date] = []
     @State private var cycle: Int = 1
-    @State private var selectedUser: User?
     @State private var showMessage: Bool = false
 
     var body: some View {
@@ -36,18 +34,6 @@ struct MedicationFormView: View {
                     }
                     ExpectedTimesView(expectedTimes: $expectedTimes)
                     ActualTimesView(actualTimes: $actualTimes, expectedTimes: expectedTimes)
-                    Section(header: Text("复制药物").font(.headline)) {
-                        Picker("选择用户", selection: $selectedUser) {
-                            ForEach(users) { user in
-                                Text(user.name).tag(user as User?)
-                            }
-                        }
-                        .pickerStyle(MenuPickerStyle())
-                        Button("确认复制") {
-                            copyMedication()
-                        }
-                        .disabled(selectedUser == nil)
-                    }
                 }
                 HStack {
                     Spacer()
@@ -83,16 +69,10 @@ struct MedicationFormView: View {
                     Spacer()
                 }
                 .padding()
-                .alert(isPresented: $showMessage) {
-                    Alert(title: Text("复制成功"), message: Text("成功复制给了: \(selectedUser?.name ?? "")"), dismissButton: .default(Text("OK")))
-                }
             }
             .navigationTitle("增/改药物")
             .onAppear {
                 loadMedication()
-                if selectedUser == nil, let firstUser = users.first {
-                    selectedUser = firstUser
-                }
             }
         }
     }
@@ -121,18 +101,6 @@ struct MedicationFormView: View {
         medication.expectedTimes = expectedTimes
         medication.actualTimes = actualTimes
         medication.cycle = cycle
-    }
-
-    private func copyMedication() {
-        guard let selectedUser = selectedUser else { return }
-        if let index = users.firstIndex(where: { $0.id == selectedUser.id }) {
-            var copiedMedication = medication
-            copiedMedication.id = UUID()
-            users[index].medications.append(copiedMedication)
-            withAnimation {
-                showMessage = true
-            }
-        }
     }
 }
 
@@ -181,8 +149,4 @@ struct AlignedLabelIntValueField: View {
                 .textFieldStyle(RoundedBorderTextFieldStyle())
         }
     }
-}
-
-#Preview {
-    MedicationFormView(medication: .constant(Medication(id: UUID(), name: "test med", brand: "some brand")), onSave: {}, onCancel: {}, onDelete: {}, users: .constant([User(id: UUID(), name: "Test User", medications: [])]))
 }

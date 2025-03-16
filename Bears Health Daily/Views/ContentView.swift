@@ -1,50 +1,38 @@
 //
 //  ContentView.swift
-//  Bears Health Daily
 //
-//  Created by xuanxuan on 12/19/24.
+//  Created by xuanxuan on 3/14/25.
 //
 
 import SwiftUI
+import CoreData
+import Firebase
+import FirebaseAuth
 
 struct ContentView: View {
-    @State private var users: [User] = UserDefaultsManager.shared.loadUsers()
+    @EnvironmentObject var viewModel: AuthViewModel
+    @State private var isLoading = true
 
     var body: some View {
-        TabView {
-            ForEach(users.indices, id: \.self) { index in
-                MedicationListView(user: $users[index], users: $users)
-                    .tabItem {
-                        Label(users[index].name, systemImage: "person.circle")
-                    }
+        Group {
+            if isLoading {
+                Text("Loading...")
+            } else if viewModel.userSession != nil {
+                AppView()
+            } else {
+                LoginView()
             }
         }
         .onAppear {
-           if users.isEmpty {
-                addSampleData()
-           }
+            Task {
+                await viewModel.fetchUser()
+                isLoading = false
+            }
         }
-        .onChange(of: users) { 
-            UserDefaultsManager.shared.saveUsers(users)
-            print("Content: Saved")
-        }
-    }
-
-    private func addSampleData() {
-        users = [
-            User(id: UUID(), name: "爸爸", medications: [
-                Medication(id: UUID(), name: "Medication 1", brand: "brand 1")
-            ]),
-            User(id: UUID(), name: "妈妈", medications: [
-                Medication(id: UUID(), name: "Medication 2", brand: "brand 2")
-            ]),
-            User(id: UUID(), name: "宝宝", medications: [
-                Medication(id: UUID(), name: "Medication 3", brand: "brand 3")
-            ])
-        ]
     }
 }
 
 #Preview {
     ContentView()
+        .environmentObject(AuthViewModel())
 }
