@@ -20,19 +20,19 @@ struct AppView: View {
             TabView {
                 HomeView()
                     .tabItem {
-                        Label("Home", systemImage: "house.fill")
+                        Label("主页", systemImage: "house.fill")
                     }
                     .tag(Tab.home)
                 
                 FriendsView()
                     .tabItem {
-                        Label("Friends", systemImage: "person.2.fill")
+                        Label("好友", systemImage: "person.2.fill")
                     }
                     .tag(Tab.friends)
                 
                 ProfileView()
                     .tabItem {
-                        Label("Profile", systemImage: "person.fill")
+                        Label("账号", systemImage: "person.fill")
                     }
                     .tag(Tab.profile)
             }
