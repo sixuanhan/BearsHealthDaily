@@ -62,7 +62,7 @@ struct SearchView: View {
                                     VStack(alignment: .leading) {
                                         Text(user.email)
                                             .fontWeight(.semibold)
-                                            .foregroundColor(.black)
+                                            .foregroundColor(.primary)
                                         
                                         Text(user.username)
                                             .font(.footnote)
@@ -73,7 +73,7 @@ struct SearchView: View {
                                     
                                     Spacer()
                                 }
-                                .foregroundColor(.black)
+                                .foregroundColor(.primary)
                                 .padding(.horizontal)
                             }
                         }

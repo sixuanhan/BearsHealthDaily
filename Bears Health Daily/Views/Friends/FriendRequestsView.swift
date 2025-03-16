@@ -50,7 +50,7 @@ struct FriendRequestsView: View {
                                     VStack(alignment: .leading) {
                                         Text(user.username)
                                             .fontWeight(.semibold)
-                                            .foregroundColor(.black)
+                                            .foregroundColor(.primary)
                                         
                                         Text(user.email)
                                             .font(.footnote)

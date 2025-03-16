@@ -138,7 +138,7 @@ struct FriendsView: View {
                             VStack(alignment: .leading) {
                                 Text(friend.username)
                                     .fontWeight(.semibold)
-                                    .foregroundColor(.black)
+                                    .foregroundColor(.primary)
                                 
                                 Text(friend.email)
                                     .font(.footnote)

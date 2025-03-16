@@ -259,9 +259,9 @@ class AuthViewModel: ObservableObject {
                 print("DEBUG: No data found for user ID \(uid).")
                 return
             }
-            print("DEBUG: Fetched user data: \(data)")
+            // print("DEBUG: Fetched user data: \(data)")
             self.currentUser = try snapshot.data(as: User.self)
-            print("DEBUG: Current user is \(String(describing: self.currentUser))")
+            // print("DEBUG: Current user is \(String(describing: self.currentUser))")
         } catch {
             print("DEBUG: Error fetching user: \(error.localizedDescription)")
         }

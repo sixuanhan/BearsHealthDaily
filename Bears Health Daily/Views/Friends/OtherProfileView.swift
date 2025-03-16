@@ -83,7 +83,7 @@ struct OtherProfileView: View {
                      .padding(.horizontal)
                  }
             }
-            .navigationBarTitle("Profile", displayMode: .inline)
+            // .navigationBarTitle("Profile", displayMode: .inline)
             .onAppear {
                 Task {
                     await checkFriendStatus(for: user.id)

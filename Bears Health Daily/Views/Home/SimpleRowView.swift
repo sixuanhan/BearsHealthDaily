@@ -33,7 +33,7 @@ struct SimpleRowView: View {
                         .padding(.horizontal, 16)
                         .background(Color.green)
                         .cornerRadius(10)
-                        .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
+                        .shadow(color: .primary.opacity(0.2), radius: 5, x: 0, y: 5)
                 }
 
                 Spacer()
@@ -45,8 +45,8 @@ struct SimpleRowView: View {
         .frame(maxWidth: .infinity)
         .background(
             RoundedRectangle(cornerRadius: 10)
-                .fill(Color(.systemBackground))
-                .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
+                .fill(medication.actualTimes.count >= medication.expectedTimes.count ? Color.gray.opacity(0.3) : Color(.systemBackground))
+                .shadow(color: .primary.opacity(0.1), radius: 5, x: 0, y: 5)
         )
     }
 }

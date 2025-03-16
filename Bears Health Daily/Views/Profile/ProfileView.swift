@@ -25,7 +25,7 @@ struct ProfileView: View {
             if let user = viewModel.currentUser {
                 Form {         
                     VStack {
-                        VStack(alignment: .center, spacing: 10) {
+                        VStack(alignment: .leading, spacing: 10) {
                             Text(user.username)
                                 .font(.title2)
                                 .fontWeight(.semibold)
@@ -33,10 +33,6 @@ struct ProfileView: View {
                             
                             Text(user.email)
                                 .font(.subheadline)
-                                .foregroundColor(.gray)
-                            
-                            Text(user.id)
-                                .font(.caption)
                                 .foregroundColor(.gray)
                         }
                     }

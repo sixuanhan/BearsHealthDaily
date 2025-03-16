@@ -36,9 +36,6 @@ struct MedicationDetailsView: View {
                 Text("周期（天）: \(medication.cycle)")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
-                Text("上次清零日期: \(medication.lastClearedDate)")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
             }
             Spacer()
             Text("\(medication.actualTimes.count)/\(medication.expectedTimes.count)")
@@ -49,7 +46,7 @@ struct MedicationDetailsView: View {
         .background(
             RoundedRectangle(cornerRadius: 10)
                 .fill(Color(.systemBackground))
-                .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
+                .shadow(color: .primary.opacity(0.1), radius: 5, x: 0, y: 5)
         )
         .contentShape(Rectangle())
     }

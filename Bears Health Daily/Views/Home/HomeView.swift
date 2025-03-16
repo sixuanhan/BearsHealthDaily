@@ -15,12 +15,15 @@ struct HomeView: View {
 
     var body: some View {
         NavigationView {
-            if let currentUser = currentUser {
-                MyMedicationView(user: Binding($currentUser)!)
-                    .navigationTitle("Home")
-            } else {
-                Text("Loading...")
-                    .navigationTitle("Home")
+            VStack {
+                if let currentUser = currentUser {
+                    medicationStatusSection
+                    MyMedicationView(user: Binding($currentUser)!)
+                        .navigationTitle("Home")
+                } else {
+                    Text("Loading...")
+                        .navigationTitle("Home")
+                }
             }
         }
         .onAppear {
@@ -31,6 +34,33 @@ struct HomeView: View {
                 }
             }
         }
+    }
+
+    private var medicationStatusSection: some View {
+        VStack {
+            if let currentUser = currentUser {
+                if allMedicationsFinished(for: currentUser) {
+                    Text("Good job! You have taken all meds.")
+                        .font(.headline)
+                        .foregroundColor(.green)
+                        .padding()
+                } else {
+                    Text("You still have meds to take.")
+                        .font(.headline)
+                        .foregroundColor(.red)
+                        .padding()
+                }
+            }
+        }
+    }
+
+    private func allMedicationsFinished(for user: User) -> Bool {
+        for medication in user.medications {
+            if medication.actualTimes.count < medication.expectedTimes.count {
+                return false
+            }
+        }
+        return true
     }
 }
 
