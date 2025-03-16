@@ -118,13 +118,6 @@ class AuthViewModel: ObservableObject {
                 throw AuthError.unknown(error.localizedDescription)
             }
         }
-        
-        /*
-        catch {
-            // print("DEBUG: Failed to create user with error \(error.localizedDescription)")
-            
-        }
-         */
     }
     
     func signOut() {

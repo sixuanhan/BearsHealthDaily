@@ -111,9 +111,6 @@ struct FriendRequestsView: View {
         do {
             let snapshot = try await receivedRequests.getDocuments()
             var users: [User] = []
-            
-            // Debug output to see how many documents are retrieved
-            print("Received requests count: \(snapshot.documents.count)")
 
             // Fetch user data for each friend request
             for document in snapshot.documents {
@@ -176,9 +173,7 @@ struct FriendRequestsView: View {
                     if let index = friendRequests.firstIndex(where: { $0.id == userId }) {
                         friendRequests.remove(at: index)
                     }
-                }
-                
-                print("Friend request accepted")
+                } 
             }
         }
     }
@@ -208,8 +203,6 @@ struct FriendRequestsView: View {
                 friendRequests.remove(at: index)
             }
         }
-        
-        print("Friend request rejected")
     }
 }
 

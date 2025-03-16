@@ -205,10 +205,7 @@ struct FriendsView: View {
             // Update the friends list
             DispatchQueue.main.async {
                 self.friends = users
-            }
-            
-            print("Friends: \(users)")
-            
+            }            
         } catch {
             print("Error fetching friends: \(error)")
         }

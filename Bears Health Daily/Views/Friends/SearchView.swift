@@ -100,10 +100,8 @@ struct SearchView: View {
     func searchUsers(query: String) async {
         do {
             let allUsers = try await UserService.fetchAllUsers()
-            
             guard let currentUserId = Auth.auth().currentUser?.uid else { return }
             let filteredUsers = allUsers.filter { $0.id != currentUserId }      // Don't include the user
-            
             if query.isEmpty {
                 users = filteredUsers
             } else {

@@ -21,14 +21,26 @@ struct UserService {
             
             if let fullname = data["username"] as? String,
                let email = data["email"] as? String,
-               let medications = data["medications"] as? [Medication] {
+               let medicationsData = data["medications"] as? [[String: Any]] {
+                // Deserialize medications
+                let medications = medicationsData.compactMap { dict -> Medication? in
+                    guard let id = dict["id"] as? String,
+                          let name = dict["name"] as? String,
+                          let brand = dict["brand"] as? String else {
+                        return nil
+                    }
+                    return Medication(id: UUID(uuidString: id) ?? UUID(), name: name, brand: brand)
+                }
+                
                 // Create the user object manually from the data
                 let user = User(id: document.documentID, username: fullname, email: email, medications: medications)
                 users.append(user)
+            } else {
+                print("Failed to parse user data for document: \(document.documentID)")
             }
         }
 
         return users
     } 
 }
- 
+

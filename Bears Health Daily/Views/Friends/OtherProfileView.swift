@@ -46,8 +46,7 @@ struct OtherProfileView: View {
                 // Friend request status
                 Button(action: {
                     handleFriendRequest()
-                }) {
-                    
+                }) {               
                     Text(friendStatus)
                         .foregroundColor(.white)
                         .padding(.vertical, 12)
@@ -68,7 +67,7 @@ struct OtherProfileView: View {
                         MedicationDetailsView(medication: medication)
                     }
                  } else {
-                     Spacer(minLength: 75)
+                    //  Spacer(minLength: 75)
                      VStack {
                          Image(systemName: "lock.fill")
                              .resizable()
@@ -231,39 +230,7 @@ struct OtherProfileView: View {
                         print("Error removing friend from other user's collection: \(error2)")
                     }
                 }
-                
-                db.collection("users").document(user.id).collection("posts").whereField("userId", isEqualTo: currentUserId).getDocuments { snapshot, error3 in
-                    if let error3 = error3 {
-                        print("Error fetching workout posts for deletion: \(error3)")
-                    } else {
-                        snapshot?.documents.forEach { document in
-                            document.reference.delete { error4 in
-                                if let error4 = error4 {
-                                    print("Error deleting workout post: \(error4)")
-                                } else {
-                                    print("Workout post deleted successfully.")
-                                }
-                            }
-                        }
-                    }
-                }
-                
-                db.collection("users").document(currentUserId).collection("posts").whereField("userId", isEqualTo: user.id).getDocuments { snapshot, error3 in
-                    if let error3 = error3 {
-                        print("Error fetching workout posts for deletion: \(error3)")
-                    } else {
-                        snapshot?.documents.forEach { document in
-                            document.reference.delete { error4 in
-                                if let error4 = error4 {
-                                    print("Error deleting workout post: \(error4)")
-                                } else {
-                                    print("Workout post deleted successfully.")
-                                }
-                            }
-                        }
-                    }
-                }
-                
+                         
                 // Update friendStatus on the main thread
                 DispatchQueue.main.async {
                     self.friendStatus = "Send Friend Request"  // After unfriending, the option goes back to "Send Friend Request"

@@ -28,7 +28,6 @@ struct SimpleListView: View {
         let sortedMedications = user.medications.sorted {
             ($0.actualTimes.count < $0.expectedTimes.count) && !($1.actualTimes.count < $1.expectedTimes.count)
         }
-        print("sortedMedications: \(sortedMedications)")
         return sortedMedications
     }
 
