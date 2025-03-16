@@ -19,7 +19,7 @@ struct LoginView: View {
                 // form fields
                 VStack(spacing: 24) {
                     InputView(text: $email,
-                              title: "Email Address",
+                              title: "电子邮箱",
                               placeholder: "name@example.com")
                     .autocapitalization(.none)
                     .onChange(of: email) {
@@ -27,8 +27,8 @@ struct LoginView: View {
                     }
                     
                     InputView(text: $password,
-                              title: "Password",
-                              placeholder: "Enter your password",
+                              title: "密码",
+                              placeholder: "123456",
                               isSecureField: true)
                     .onChange(of: password) {
                         viewModel.loginError = nil
@@ -50,7 +50,7 @@ struct LoginView: View {
                         do {
                             try await viewModel.signIn(withEmail: email, password: password)
                         } catch {
-                            if viewModel.loginError == "Incorrect username or password." {
+                            if viewModel.loginError == "邮箱或密码不正确" {
                                 email = ""
                                 password = ""
                             }
@@ -60,7 +60,7 @@ struct LoginView: View {
                     }
                 } label: {
                     HStack {
-                        Text("SIGN IN")
+                        Text("登入")
                             .fontWeight(.semibold)
                         Image(systemName: "arrow.right")
                     }
@@ -82,8 +82,8 @@ struct LoginView: View {
                         .environment(\.colorScheme, .light) // Force light mode for this view
                 } label: {
                     HStack(spacing: 3) {
-                        Text("Don't have an account?")
-                        Text("Sign up")
+                        Text("没有账号？")
+                        Text("注册")
                             .fontWeight(.bold)
                     }
                     .font(.system(size: 14))
@@ -93,7 +93,7 @@ struct LoginView: View {
             }
         }
         .alert(item: $viewModel.alertMessage) { alert in
-            Alert(title: Text("Sign-In Failed"),
+            Alert(title: Text("登入失败"),
                   message: Text(alert.message))
         }
         .environment(\.colorScheme, .light) // Force light mode for this view

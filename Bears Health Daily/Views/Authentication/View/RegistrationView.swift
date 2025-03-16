@@ -22,7 +22,7 @@ struct RegistrationView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 9) {
             InputView(text: $email,
-                      title: "Email Address",
+                      title: "电子邮箱",
                       placeholder: "name@example.com")
             .autocapitalization(.none)
             .onChange(of: email) {
@@ -38,13 +38,13 @@ struct RegistrationView: View {
             }
             
             InputView(text: $fullname,
-                      title: "Full Name",
-                      placeholder: "John Doe")
+                      title: "姓名",
+                      placeholder: "张伟")
             
             VStack(alignment: .leading, spacing: 9) {
                 InputView(text: $password,
-                          title: "Password",
-                          placeholder: "Enter your password",
+                          title: "密码",
+                          placeholder: "123456",
                           isSecureField: true)
                 .onChange(of: password) {
                     validatePassword()
@@ -62,8 +62,8 @@ struct RegistrationView: View {
             ZStack(alignment: .trailing) {
                 
                 InputView(text: $confirmPassword,
-                          title: "Confirm Password",
-                          placeholder: "Confirm your password",
+                          title: "确认密码",
+                          placeholder: "请确认密码",
                           isSecureField: true)
                 
                 if !password.isEmpty && !confirmPassword.isEmpty {
@@ -106,7 +106,7 @@ struct RegistrationView: View {
             }
         } label: {
             HStack {
-                Text("SIGN UP")
+                Text("注册")
                     .fontWeight(.semibold)
                 Image(systemName: "arrow.right")
             }
@@ -119,7 +119,7 @@ struct RegistrationView: View {
         .cornerRadius(10)
         .padding(.top, 24)
         .alert(item: $viewModel.alertMessage) { alert in
-            Alert(title: Text("Sign-Up Failed"),
+            Alert(title: Text("注册失败"),
                   message: Text(alert.message))
         }
         
@@ -129,8 +129,8 @@ struct RegistrationView: View {
             dismiss()
         } label: {
             HStack(spacing: 3) {
-                Text("Already have an account?")
-                Text("Sign in")
+                Text("已经有了账号？")
+                Text("登入")
                     .fontWeight(.bold)
             }
             .font(.system(size: 14))
@@ -140,7 +140,7 @@ struct RegistrationView: View {
     
     private func validatePassword() {
         if password.count < 6 {
-            passwordErrorMessage = "Password must be at least 6 characters."
+            passwordErrorMessage = "密码至少需要6个字符"
         } else {    // Consider adding more logic here
             passwordErrorMessage = ""
         }

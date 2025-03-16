@@ -17,7 +17,7 @@ struct FriendRequestsView: View {
     
     var body: some View {
         VStack {
-            Text("Friend Requests")
+            Text("好友申请")
                 .font(.title)
                 .fontWeight(.semibold)
                 .padding()
@@ -32,7 +32,7 @@ struct FriendRequestsView: View {
                         .frame(width: 80, height: 80)
                         .foregroundColor(.gray)
                     
-                    Text("No Friend Requests")
+                    Text("没有好友申请")
                         .font(.title)
                         .fontWeight(.bold)
                         .foregroundColor(.gray)
@@ -86,7 +86,7 @@ struct FriendRequestsView: View {
                 }
             }
         }
-        .navigationBarTitle("Friend Requests", displayMode: .inline)
+        .navigationBarTitle("好友申请", displayMode: .inline)
         .onAppear {
             Task {
                 await fetchFriendRequests()
@@ -131,7 +131,7 @@ struct FriendRequestsView: View {
             }
             
             // Debug line to check if users are populated
-            print("Friend requests: \(users)")
+            // print("Friend requests: \(users)")
             
         } catch {
             print("Error fetching friend requests: \(error)")

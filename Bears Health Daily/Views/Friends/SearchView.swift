@@ -19,7 +19,7 @@ struct SearchView: View {
     
     var body: some View {
         VStack {     
-            TextField("Search...", text: $searchText)
+            TextField("搜索...", text: $searchText)
                 .padding(7)
                 .padding(.leading, 35)  // Add space for the magnifying glass
                 .background(Color(.systemGray6))
@@ -40,7 +40,7 @@ struct SearchView: View {
                 
                 Spacer(minLength: 100)
                 
-                Text("Enter an email or username to search...")
+                Text("输入电子邮箱或用户名来搜索...")
                     .foregroundColor(.gray)
                     .padding(.top, 20)
                     .font(.subheadline)
@@ -83,7 +83,7 @@ struct SearchView: View {
                 
             }
         }
-        .navigationBarTitle("Add Friends", displayMode: .inline)
+        .navigationBarTitle("添加好友", displayMode: .inline)
         .navigationBarBackButtonHidden(false)
         .onChange(of: searchText) { newValue in
             Task {

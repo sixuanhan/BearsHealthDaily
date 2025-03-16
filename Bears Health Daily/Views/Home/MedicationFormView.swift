@@ -113,7 +113,7 @@ struct AlignedLabelTextField: View {
             Text(label)
                 .foregroundColor(.secondary)
                 .frame(width: 100, alignment: .leading)
-            TextField("Enter \(label.lowercased())", text: $text)
+            TextField("输入 \(label.lowercased())", text: $text)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
         }
     }
@@ -129,7 +129,7 @@ struct AlignedLabelValueField: View {
             Text(label)
                 .foregroundColor(.secondary)
                 .frame(width: 100, alignment: .leading)
-            TextField("Enter \(label.lowercased())", value: $value, formatter: formatter)
+            TextField("输入 \(label.lowercased())", value: $value, formatter: formatter)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
         }
     }
@@ -145,7 +145,7 @@ struct AlignedLabelIntValueField: View {
             Text(label)
                 .foregroundColor(.secondary)
                 .frame(width: 100, alignment: .leading)
-            TextField("Enter \(label.lowercased())", value: $value, formatter: formatter)
+            TextField("输入 \(label.lowercased())", value: $value, formatter: formatter)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
         }
     }

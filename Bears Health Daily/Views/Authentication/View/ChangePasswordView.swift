@@ -22,21 +22,21 @@ struct ChangePasswordView: View {
 
     var body: some View {
         VStack {
-            Text("Change Password")
+            Text("更改密码")
                 .font(.title)
                 .fontWeight(.bold)
                 .padding(.top, 9)
 
             VStack(alignment: .leading, spacing: 9) {
                 InputView(text: $currentPassword,
-                          title: "Current Password",
-                          placeholder: "Enter your current password",
+                          title: "当前密码",
+                          placeholder: "请输入当前的密码",
                           isSecureField: true)
 
                 VStack(alignment: .leading, spacing: 9) {
                     InputView(text: $newPassword,
-                              title: "New Password",
-                              placeholder: "Enter your new password",
+                              title: "新密码",
+                              placeholder: "请输入新的密码",
                               isSecureField: true)
                     .onChange(of: newPassword) {
                         validatePassword()
@@ -53,8 +53,8 @@ struct ChangePasswordView: View {
                 
                 ZStack(alignment: .trailing) {
                     InputView(text: $confirmPassword,
-                              title: "Confirm New Password",
-                              placeholder: "Confirm your new password",
+                              title: "确认新密码",
+                              placeholder: "请再次输入新密码",
                               isSecureField: true)
                     
                     if !newPassword.isEmpty && !confirmPassword.isEmpty {
@@ -88,7 +88,7 @@ struct ChangePasswordView: View {
                 }
             } label: {
                 HStack {
-                    Text("Update Password")
+                    Text("更新密码")
                         .fontWeight(.semibold)
                     Image(systemName: "lock.rotation")
                 }
@@ -104,15 +104,15 @@ struct ChangePasswordView: View {
             Spacer()
         }
         .padding()
-        .alert("Incorrect Password", isPresented: $showIncorrectPasswordAlert, actions: {
+        .alert("密码错误", isPresented: $showIncorrectPasswordAlert, actions: {
             Button("Close", role: .cancel) {}
         }, message: {
-            Text("Please try again.")
+            Text("请重试")
         })
-        .alert("Password Updated", isPresented: $showSuccessAlert, actions: {
-            Button("Close") { dismiss() }
+        .alert("已更新密码", isPresented: $showSuccessAlert, actions: {
+            Button("关闭") { dismiss() }
         }, message: {
-            Text("Your password has been successfully updated.")
+            Text("你的密码已经成功更新")
         })
     }
 
@@ -130,13 +130,13 @@ struct ChangePasswordView: View {
 
     private func changePassword() async {
         guard let user = Auth.auth().currentUser else {
-            errorMessage = "User not authenticated."
+            errorMessage = "用户未登录"
             clearFields()
             return
         }
 
         guard newPassword == confirmPassword else {
-            errorMessage = "Passwords do not match."
+            errorMessage = "密码不匹配"
             return
         }
 

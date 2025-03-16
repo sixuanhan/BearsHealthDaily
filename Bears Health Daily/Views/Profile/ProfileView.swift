@@ -37,10 +37,10 @@ struct ProfileView: View {
                         }
                     }
                     
-                    Section("Account") {
+                    Section("账号") {
                         NavigationLink(destination: ChangePasswordView()) {
                             SettingsRowView(imageName: "key.fill",
-                                            title: "Change Password",
+                                            title: "更改密码",
                                             textColor: .primary)
                         }
                         
@@ -48,14 +48,14 @@ struct ProfileView: View {
                             showSignOutAlert = true
                         } label: {
                             SettingsRowView(imageName: "arrow.left.circle.fill",
-                                            title: "Sign Out",
+                                            title: "登出账号",
                                             textColor: .primary)
                         }
                         .alert(isPresented: $showSignOutAlert) {
                             Alert(
-                                title: Text("Sign Out"),
-                                message: Text("Are you sure you want to sign out?"),
-                                primaryButton: .destructive(Text("Sign Out")) {
+                                title: Text("登出"),
+                                message: Text("确定要登出吗？"),
+                                primaryButton: .destructive(Text("登出")) {
                                     viewModel.signOut()
                                 },
                                 secondaryButton: .cancel()
@@ -66,15 +66,15 @@ struct ProfileView: View {
                             showDeleteAccountAlert = true
                         } label: {
                             SettingsRowView(imageName: "xmark.circle.fill",
-                                            title: "Delete Account",
+                                            title: "删除账号",
                                             tintColor: .red,
                                             textColor: .red)
                         }
                         .alert(isPresented: $showDeleteAccountAlert) {
                             Alert(
-                                title: Text("Delete Account"),
-                                message: Text("Are you sure you want to delete your account? This action cannot be undone."),
-                                primaryButton: .destructive(Text("Delete")) {
+                                title: Text("删除账号"),
+                                message: Text("确定要删除账号吗？此操作不可逆。"),
+                                primaryButton: .destructive(Text("删除")) {
                                     viewModel.deleteAccount()
                                     navigateToLoginView = true
                                 },
@@ -83,7 +83,7 @@ struct ProfileView: View {
                         }
                     }
                 }
-                .navigationBarTitle("Profile")
+                .navigationBarTitle("账号")
             }
         }
     }

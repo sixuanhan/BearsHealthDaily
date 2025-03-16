@@ -79,7 +79,7 @@ struct MedicationRowView: View {
                 Alert(
                     title: Text("警告"),
                     message: Text("你不需要再吃药了"),
-                    primaryButton: .default(Text("确定")),
+                    primaryButton: .default(Text("哦好")),
                     secondaryButton: .destructive(Text("依然吃药"), action: {
                         medication.actualTimes.append(Date())
                     })

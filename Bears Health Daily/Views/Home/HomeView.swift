@@ -19,10 +19,10 @@ struct HomeView: View {
                 if let currentUser = currentUser {
                     medicationStatusSection
                     MyMedicationView(user: Binding($currentUser)!)
-                        .navigationTitle("Home")
+                        .navigationTitle("我的主页")
                 } else {
-                    Text("Loading...")
-                        .navigationTitle("Home")
+                    Text("正在加载...")
+                        .navigationTitle("我的主页")
                 }
             }
         }
@@ -40,12 +40,12 @@ struct HomeView: View {
         VStack {
             if let currentUser = currentUser {
                 if allMedicationsFinished(for: currentUser) {
-                    Text("Good job! You have taken all meds.")
+                    Text("太棒了！今天的药物已经全部服用完毕。")
                         .font(.headline)
                         .foregroundColor(.green)
                         .padding()
                 } else {
-                    Text("You still have meds to take.")
+                    Text("今天还有药物未服用，请记得完成。")
                         .font(.headline)
                         .foregroundColor(.red)
                         .padding()

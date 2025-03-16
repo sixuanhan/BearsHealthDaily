@@ -28,7 +28,7 @@ struct FriendsView: View {
                     friendsList
                 }
             }
-            .navigationTitle("Friends")
+            .navigationTitle("好友")
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     NavigationLink(destination: FriendRequestsView(), isActive: $isFriendRequestsViewPresented) {
@@ -80,7 +80,7 @@ struct FriendsView: View {
     
     private var searchField: some View {
         HStack {
-            TextField("Search...", text: $searchText)
+            TextField("搜索...", text: $searchText)
                 .padding(7)
                 .padding(.leading, 40)  // Add space for the magnifying glass
                 .background(Color(.systemGray6))
@@ -111,13 +111,13 @@ struct FriendsView: View {
                 .frame(width: 30, height: 30)
                 .foregroundColor(.gray)
             
-            Text("No friends found!")
+            Text("没有找到好友！")
                 .font(.title2)
                 .fontWeight(.bold)
                 .foregroundColor(.gray)
                 .padding(.top, 20)
             
-            Text("Explore other accounts to connect with.")
+            Text("查找并添加您的好友以查看他们的进度。")
                 .foregroundColor(.gray)
                 .font(.system(size: 15))
                 .padding(.top, 3)
@@ -145,7 +145,18 @@ struct FriendsView: View {
                                     .foregroundColor(.gray)
                             }
                             .padding(.leading, 20) // Add padding to the leading edge
+                            
                             Spacer()
+
+                            if allMedicationsFinished(for: friend) {
+                                Image(systemName: "checkmark")
+                                    .foregroundColor(.green)
+                                    .padding(.trailing, 20)
+                            } else {
+                                Image(systemName: "exclamationmark.triangle")
+                                    .foregroundColor(.red)
+                                    .padding(.trailing, 20)
+                            }
                         }
                         .padding(.vertical, 10)
                     }
@@ -209,6 +220,15 @@ struct FriendsView: View {
         } catch {
             print("Error fetching friends: \(error)")
         }
+    }
+
+    func allMedicationsFinished(for user: User) -> Bool {
+        for medication in user.medications {
+            if medication.actualTimes.count < medication.expectedTimes.count {
+                return false
+            }
+        }
+        return true
     }
 }
 

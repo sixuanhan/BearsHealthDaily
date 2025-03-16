@@ -13,7 +13,7 @@ import FirebaseFirestoreCombineSwift
 import Charts
 
 struct OtherProfileView: View {
-    @State private var friendStatus: String = "Send Friend Request"
+    @State private var friendStatus: String = "发送好友申请"
     @State private var isFriendRequestPending: Bool = false
     @State private var isUnfriendConfirmationPresented: Bool = false
     @State private var userState: User
@@ -51,7 +51,7 @@ struct OtherProfileView: View {
                         .foregroundColor(.white)
                         .padding(.vertical, 12)
                         .frame(maxWidth: .infinity)
-                        .background(friendStatus == "Friend" ? Color.green : (friendStatus == "Send Friend Request" ? Color.blue : Color.gray))
+                        .background(friendStatus == "已是好友" ? Color.green : (friendStatus == "发送好友申请" ? Color.blue : Color.gray))
                         .cornerRadius(12)
                         .shadow(radius: 5)
                     
@@ -61,13 +61,13 @@ struct OtherProfileView: View {
                 
                 Spacer()
                 
-                 if friendStatus == "Friend" {
+                 if friendStatus == "已是好友" {
                     SimpleListView(user: $userState, navigationSelection: $navigationSelection)
                     .navigationDestination(for: Medication.self) { medication in
                         MedicationDetailsView(medication: medication)
                     }
                  } else {
-                    //  Spacer(minLength: 75)
+                     Spacer()
                      VStack {
                          Image(systemName: "lock.fill")
                              .resizable()
@@ -75,25 +75,25 @@ struct OtherProfileView: View {
                              .frame(width: 90, height: 90)
                              .foregroundColor(.gray)
                         
-                         Text("Add as friend to see more info")
+                         Text("添加好友以查看药物")
                              .font(.headline)
                              .foregroundColor(.gray)
                              .padding(.top, 10)
                      }
                      .padding(.horizontal)
+                     Spacer()
                  }
             }
-            // .navigationBarTitle("Profile", displayMode: .inline)
             .onAppear {
                 Task {
                     await checkFriendStatus(for: user.id)
                 }
             }
-            .confirmationDialog("Are you sure you want to unfriend \(user.username)?", isPresented: $isUnfriendConfirmationPresented, titleVisibility: .visible) {
-                Button("Unfriend", role: .destructive) {
+            .confirmationDialog("确定要移除 \(user.username) 吗?", isPresented: $isUnfriendConfirmationPresented, titleVisibility: .visible) {
+                Button("移除好友", role: .destructive) {
                     unfriendUser(db: Firestore.firestore(), currentUserId: Auth.auth().currentUser?.uid ?? "")
                 }
-                Button("Cancel", role: .cancel) {}
+                Button("取消", role: .cancel) {}
             }
         }
     }
@@ -114,13 +114,13 @@ struct OtherProfileView: View {
         
         DispatchQueue.main.async {
             if let _ = isFriend?.data() {
-                friendStatus = "Friend"
+                friendStatus = "已是好友"
             } else if let _ = sentRequest?.data() {
-                friendStatus = "Pending Friend Request"
+                friendStatus = "等待对方接受好友申请"
             } else if let _ = receivedRequest?.data() {
-                friendStatus = "Accept Friend Request"
+                friendStatus = "接受好友申请"
             } else {
-                friendStatus = "Send Friend Request"
+                friendStatus = "发送好友申请"
             }
         }
     }
@@ -133,16 +133,16 @@ struct OtherProfileView: View {
         
         let db = Firestore.firestore()
 
-        if friendStatus == "Send Friend Request" {
+        if friendStatus == "发送好友申请" {
             // Send a request
             sendFriendRequest(db: db, currentUserId: currentUserId)
-        } else if friendStatus == "Pending Friend Request" {
+        } else if friendStatus == "等待对方接受好友申请" {
             // Cancel request
             cancelFriendRequest(db: db, currentUserId: currentUserId)
-        } else if friendStatus == "Accept Friend Request" {
+        } else if friendStatus == "接受好友申请" {
             // Accept request
             acceptFriendRequest(db: db, currentUserId: currentUserId)
-        } else if friendStatus == "Friend" {
+        } else if friendStatus == "已是好友" {
             // Unfriend
             // unfriendUser(db: db, currentUserId: currentUserId)
             isUnfriendConfirmationPresented = true
@@ -163,7 +163,7 @@ struct OtherProfileView: View {
                 }
                 // Update friendStatus on the main thread
                 DispatchQueue.main.async {
-                    self.friendStatus = "Pending Friend Request"
+                    self.friendStatus = "等待对方接受好友申请"
                 }
             }
         }
@@ -182,7 +182,7 @@ struct OtherProfileView: View {
                 }
                 // Update friendStatus on the main thread
                 DispatchQueue.main.async {
-                    self.friendStatus = "Send Friend Request"
+                    self.friendStatus = "发送好友申请"
                 }
             }
         }
@@ -212,7 +212,7 @@ struct OtherProfileView: View {
                 }
                 // Update friendStatus on the main thread
                 DispatchQueue.main.async {
-                    self.friendStatus = "Friend"
+                    self.friendStatus = "已是好友"
                 }
             }
         }
@@ -233,7 +233,7 @@ struct OtherProfileView: View {
                          
                 // Update friendStatus on the main thread
                 DispatchQueue.main.async {
-                    self.friendStatus = "Send Friend Request"  // After unfriending, the option goes back to "Send Friend Request"
+                    self.friendStatus = "发送好友申请"  // After unfriending, the option goes back to "Send Friend Request"
                 }
             }
         }
