@@ -36,7 +36,7 @@ struct MedicationRowView: View {
                         .padding(.horizontal, 16)
                         .background(Color.green)
                         .cornerRadius(10)
-                        .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
+                        .shadow(color: .primary.opacity(0.2), radius: 5, x: 0, y: 5)
                 }
 
                 Spacer()
@@ -50,9 +50,10 @@ struct MedicationRowView: View {
                         .font(.headline)
                         .foregroundColor(.white)
                         .padding(.vertical, 1.5)
-                        .padding(.horizontal, 16)                        .background(Color.orange)
+                        .padding(.horizontal, 16)
+                        .background(Color.orange)
                         .cornerRadius(10)
-                        .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
+                        .shadow(color: .primary.opacity(0.2), radius: 5, x: 0, y: 5)
                 }
 
                 Spacer()
@@ -68,20 +69,21 @@ struct MedicationRowView: View {
                         .font(.headline)
                         .foregroundColor(.white)
                         .padding(.vertical, 1.5)
-                        .padding(.horizontal, 16)                        .background(Color.blue)
+                        .padding(.horizontal, 16)
+                        .background(Color.blue)
                         .cornerRadius(10)
-                        .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
+                        .shadow(color: Color.primary.opacity(0.2), radius: 5, x: 0, y: 5)
                 }
-                .alert(isPresented: $showAlert) {
-                    Alert(
-                        title: Text("警告"),
-                        message: Text("你不需要再吃药了"),
-                        primaryButton: .default(Text("确定")),
-                        secondaryButton: .destructive(Text("依然吃药"), action: {
-                            medication.actualTimes.append(Date())
-                        })
-                    )
-                }
+            }
+            .alert(isPresented: $showAlert) {
+                Alert(
+                    title: Text("警告"),
+                    message: Text("你不需要再吃药了"),
+                    primaryButton: .default(Text("哦好")),
+                    secondaryButton: .destructive(Text("依然吃药"), action: {
+                        medication.actualTimes.append(Date())
+                    })
+                )
             }
             .buttonStyle(BorderlessButtonStyle())
         }
@@ -90,8 +92,8 @@ struct MedicationRowView: View {
         .frame(maxWidth: .infinity)
         .background(
             RoundedRectangle(cornerRadius: 10)
-                .fill(Color(.systemBackground))
-                .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
+                .fill(medication.actualTimes.count >= medication.expectedTimes.count ? Color.gray.opacity(0.3) : Color(.systemBackground))
+                .shadow(color: Color.primary.opacity(0.1), radius: 5, x: 0, y: 5)
         )
     }
 }
